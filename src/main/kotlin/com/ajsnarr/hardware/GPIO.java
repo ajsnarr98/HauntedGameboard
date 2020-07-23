@@ -17,6 +17,29 @@ public class GPIO {
     }
   }
 
+  public static enum Level {
+    ON(1),
+    OFF(0),
+    ERROR(-1);
+
+    private final int val;
+    Level(int val) { this.val = val; }
+  }
+
+  public static enum Mode {
+    PI_INPUT(0),
+    PI_OUTPUT(1),
+    PI_ALT0(4),
+    PI_ALT1(5),
+    PI_ALT2(6),
+    PI_ALT3(7),
+    PI_ALT4(3),
+    PI_ALT5(2);
+
+    private final int val;
+    Mode(int val) { this.val = val; }
+  }
+
   /**
    * Initialises the pigpio library. Must call before using other functions.
    *
@@ -44,8 +67,9 @@ public class GPIO {
    * @param mode mode to set
    * @return true if successful, false otherwise.
    */
-  public static boolean setMode(int gpio, int mode) {
-    return _setMode(gpio, mode) >= 0;
+  public static boolean setMode(int gpio, Mode mode) {
+    validateGpioPinNum(gpio);
+    return _setMode(gpio, mode.val) >= 0;
   }
   private static native int _setMode(int gpio, int mode);
 
@@ -55,8 +79,16 @@ public class GPIO {
    * @param gpio gpio pin to get mode for
    * @return mode of the given pin
    */
-  public static int getMode(int gpio) {
-    return _getmode(gpio);
+  public static Mode getMode(int gpio) {
+    validateGpioPinNum(gpio);
+
+    int modeVal =_getmode(gpio);
+    for (Mode mode : Mode.values()) {
+      if (mode.val == modeVal) {
+        return mode;
+      }
+    }
+    throw new IllegalStateException("Unknown mode returned from native _getMode");
   }
   private static native int _getmode(int gpio);
 
@@ -64,10 +96,19 @@ public class GPIO {
    * Reads the GPIO level, on or off.
    *
    * @param gpio gpio pin to read
-   * @return GPIO level
+   * @return on, off, or error.
    */
-  public static int read(int gpio) {
-    return _read(gpio);
+  public static Level read(int gpio) {
+    validateGpioPinNum(gpio);
+
+    int level = _read(gpio);
+    if (level > 0) {
+      return Level.ON;
+    } else if (level == 0) {
+      return Level.OFF;
+    } else {
+      return Level.ERROR;
+    }
   }
   private static native int _read(int gpio);
 
@@ -75,11 +116,13 @@ public class GPIO {
    * Sets the GPIO level, on or off.
    *
    * @param gpio gpio pin to write to
-   * @param level level to set
+   * @param level level to set. Must be ON or OFF
    * @return true if successful, false otherwise.
    */
-  public static boolean write(int gpio, int level) {
-    return _write(gpio, level) >= 0;
+  public static boolean write(int gpio, Level level) {
+    validateGpioPinNum(gpio);
+    if (level == Level.ERROR) throw new IllegalArgumentException("Must write either ON or OFF");
+    return _write(gpio, level.val) >= 0;
   }
   private static native int _write(int gpio, int level);
 
@@ -103,6 +146,13 @@ public class GPIO {
    * @return true if successful, false otherwise.
    */
   public static boolean waveRamps(int gpio, int[] rampFrequencies, int[] rampNSteps) {
+    validateGpioPinNum(gpio);
+    if (rampFrequencies.length != rampNSteps.length) {
+      throw new IllegalArgumentException("Both array args must have same length.");
+    }
+    if (rampFrequencies.length == 0) {
+      throw new IllegalArgumentException("Passed waveRamp arrays cannot be empty");
+    }
     return _waveRamps(gpio, rampFrequencies, rampNSteps) >= 0;
   }
   private static native int _waveRamps(int gpio, int[] rampFrequencies, int[] rampNSteps);
@@ -115,5 +165,13 @@ public class GPIO {
     return _waveIsBusy();
   }
   private static native boolean _waveIsBusy();
+
+  /**
+   * Makes sure gpio is valid
+   * @param gpio gpio pin number
+   */
+  private static void validateGpioPinNum(int gpio) throws IllegalArgumentException {
+    if (gpio < 0 || gpio > 27) throw new IllegalArgumentException("Invalid GPIO pin number: " + gpio);
+  }
 }
 
