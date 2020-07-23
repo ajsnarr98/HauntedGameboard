@@ -13,10 +13,10 @@ fun main(args: Array<String>) {
     }
     
     val motor = NEMA17Stepper(dirPin = 20, stepPin = 21)
-    motor.rotate(2.0, .75)
+    motor.rotate(50.0, -.5)
 
     println("sleeping...")
-    Thread.sleep(50000)
+    Thread.sleep(10000)
     println("...slept...")
 
     GPIO.onShutdown();

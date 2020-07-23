@@ -29,6 +29,8 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
     override fun step(steps: Int, dir: StepperMotor.Direction, frequency: Int, blocking: Boolean): Boolean {
         val dirLvl = if (dir == StepperMotor.Direction.CW) CW else CCW
 
+        println("stepping $steps at freq $frequency")
+    
         GPIO.write(dirPin, dirLvl)
         return GPIO.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
     }
