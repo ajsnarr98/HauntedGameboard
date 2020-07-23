@@ -13,6 +13,24 @@
 extern "C" {
 #endif
 
+#define VERBOSE 0
+#define DEBUG 1
+#define INFO 2
+#define ERROR 3
+
+int logLevel;
+
+/*
+ * Class:     com_ajsnarr_hardware_GPIO
+ * Method:    _setLogLevel
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setLogLevel
+  (JNIEnv *env, jclass clz, jint logLvl) {
+    logLevel = logLvl;
+    return logLevel;
+  }
+
 /*
  * Class:     com_ajsnarr_hardware_GPIO
  * Method:    _initialize
@@ -20,7 +38,7 @@ extern "C" {
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1initialize
   (JNIEnv *env, jclass clz) {
-    printf("Native: Initializing pigpio\n");
+    if (logLevel <= INFO) printf("Native: Initializing pigpio\n");
     return gpioInitialise();
   }
 
@@ -31,7 +49,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1initialize
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1terminate
   (JNIEnv *env, jclass clz) {
-    printf("Native: Terminating pigpio\n");
+    if (logLevel <= INFO) printf("Native: Terminating pigpio\n");
     gpioTerminate();
     return 0;
   }
@@ -43,7 +61,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1terminate
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setMode
   (JNIEnv *env, jclass clz, jint gpio, jint mode) {
-    printf("Native: gpioSetMode\n");
+    if (logLevel <= DEBUG) printf("Native: gpioSetMode\n");
     return gpioSetMode((unsigned) gpio, (unsigned) mode);
   }
 
@@ -54,7 +72,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setMode
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1getmode
   (JNIEnv *env, jclass clz, jint gpio) {
-    printf("Native: gpioGetMode\n");
+    if (logLevel <= DEBUG) printf("Native: gpioGetMode\n");
     return gpioGetMode((unsigned) gpio);
   }
 
@@ -65,7 +83,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1getmode
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1read
   (JNIEnv *env, jclass clz, jint gpio) {
-    printf("Native: gpioRead\n");
+    if (logLevel <= DEBUG) printf("Native: gpioRead\n");
     return gpioRead((unsigned) gpio);
   }
 
@@ -76,7 +94,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1read
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1write
   (JNIEnv *env, jclass clz, jint gpio, jint level) {
-    printf("Native: gpioWrite\n");
+    if (logLevel <= DEBUG) printf("Native: gpioWrite\n");
     return gpioWrite((unsigned) gpio, (unsigned) level);
   }
 
@@ -87,7 +105,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1write
  */
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveClear
   (JNIEnv *env, jclass clz) {
-    printf("Native: gpioWaveClear\n");
+    if (logLevel <= DEBUG) printf("Native: gpioWaveClear\n");
     int result = gpioWaveClear();
     gpioWaveTxStop(); // unsure if gpioWaveClear also aborts current waveform
     return result;
@@ -156,7 +174,7 @@ int generate_ramp(jint gpio, jsize nramps, jint *rampFreqs, jint *rampNSteps) {
 JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveRamps
   (JNIEnv *env, jclass clz, jint gpio, jintArray rampFreq, jintArray rampNSteps) {
     
-    printf("Native: waveRamps\n");
+    if (logLevel <= DEBUG) printf("Native: waveRamps\n");
     
     jsize len = (*env)->GetArrayLength(env, rampFreq);
     jint *freqs = (*env)->GetIntArrayElements(env, rampFreq, 0);
@@ -178,7 +196,7 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveRamps
  */
 JNIEXPORT jboolean JNICALL Java_com_ajsnarr_hardware_GPIO__1waveIsBusy
   (JNIEnv *env, jclass clz) {
-    printf("Native: gpioWaveTxBusy\n");
+    if (logLevel <= VERBOSE) printf("Native: gpioWaveTxBusy\n");
     return gpioWaveTxBusy();
   }
 

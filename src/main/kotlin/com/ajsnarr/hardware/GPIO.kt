@@ -4,6 +4,9 @@ import com.ajsnarr.util.Cleanable
 import cz.adamh.utils.NativeUtils
 import java.io.IOException
 
+import com.ajsnarr.util.LogLevel
+import com.ajsnarr.util.LOG_LEVEL
+
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
  */
@@ -24,6 +27,7 @@ object GPIO : Cleanable {
         } catch (e: IOException) {
             throw RuntimeException(e.toString())
         }
+        setLogLevel(LOG_LEVEL)
     }
 
     val users = mutableListOf<GPIOUser>()
@@ -48,6 +52,15 @@ object GPIO : Cleanable {
     override fun onShutdown() {
         terminate()
     }
+    
+    /**
+     * Sets the log level within native code.
+     */
+    fun setLogLevel(logLevel: LogLevel) {
+        _setLogLevel(logLevel.value)
+    }
+    
+    private external fun _setLogLevel(logLevel: Int): Int
 
     /**
      * Initialises the pigpio library. Must call before using other functions.

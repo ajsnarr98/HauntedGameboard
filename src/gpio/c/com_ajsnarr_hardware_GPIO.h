@@ -7,6 +7,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+ * Class:     com_ajsnarr_hardware_GPIO
+ * Method:    _setLogLevel
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setLogLevel
+  (JNIEnv *, jclass, jint);
+
 /*
  * Class:     com_ajsnarr_hardware_GPIO
  * Method:    _initialize
