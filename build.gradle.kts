@@ -22,15 +22,8 @@ sourceSets {
   main {
     java {
       srcDirs(
-              "src/main/kotlin/"
+        "src/main/kotlin/"
       )
-    }
-    jni {
-      srcDirs = []
-    }
-
-    jniLibs {
-      srcDir="src/main/libs"
     }
   }
 }
