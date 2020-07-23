@@ -7,4 +7,6 @@ fun main(args: Array<String>) {
   
   
   GPIO.initialize();
+  
+  GPIO.terminate();
 }
