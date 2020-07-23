@@ -32,7 +32,17 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
         println("stepping $steps at freq $frequency")
     
         GPIO.write(dirPin, dirLvl)
-        return GPIO.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
+        val success = GPIO.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
+        
+        if (success && blocking) {
+            // WARNING: this will block until all gpio stepper motors are done,
+            //          or any other things using waveform on gpio
+            while (isMoving()) {
+                Thread.sleep(100L)
+            }
+        }
+        
+        return success
     }
 
     override fun stop() {
