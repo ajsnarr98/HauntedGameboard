@@ -5,8 +5,10 @@ import com.ajsnarr.hardware.GPIO;
 fun main(args: Array<String>) {
   println("Hello, world!")
   
-  
-  GPIO.initialize();
-  
-  GPIO.terminate();
+  val isInit = GPIO.initialize();
+  if (isInit) {
+    GPIO.terminate();
+  } else {
+    println("Failed to initialize GPIO")
+  }
 }
