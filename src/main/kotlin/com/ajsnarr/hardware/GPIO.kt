@@ -1,12 +1,54 @@
 package com.ajsnarr.hardware
 
+import com.ajsnarr.util.Cleanable
 import cz.adamh.utils.NativeUtils
 import java.io.IOException
 
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
  */
-object GPIO {
+object GPIO : Cleanable {
+
+    enum class Level(val value: Int) {
+        ON(1), OFF(0), ERROR(-1);
+    }
+
+    enum class Mode(val value: Int) {
+        PI_INPUT(0), PI_OUTPUT(1), PI_ALT0(4), PI_ALT1(5),
+        PI_ALT2(6), PI_ALT3(7), PI_ALT4(3), PI_ALT5(2);
+    }
+
+    init {
+        try {
+            NativeUtils.loadLibraryFromJar("/lib/gpio.so")
+        } catch (e: IOException) {
+            throw RuntimeException(e.toString())
+        }
+    }
+
+    val users = mutableListOf<GPIOUser>()
+
+    /**
+     * Registers a user of this library to be "cleaned up" later.
+     */
+    fun register(user: GPIOUser) {
+        users.add(user)
+    }
+
+    /**
+     * Cleanup a specific user and remove it from tracked list.
+     */
+    fun cleanup(user: GPIOUser) {
+        if (users.remove(user)) user.onShutdown()
+    }
+
+    /**
+     * Cleans up all users and terminates lib.
+     */
+    override fun onShutdown() {
+        terminate()
+    }
+
     /**
      * Initialises the pigpio library. Must call before using other functions.
      *
@@ -15,16 +57,22 @@ object GPIO {
     fun initialize(): Boolean {
         return _initialize() >= 0
     }
+
     private external fun _initialize(): Int
 
     /**
-     * Terminates the pigpio library. Must be called before quiting.
+     * Cleans all users and terminates the pigpio library. Must be called
+     * before quiting.
      *
      * @return true if successful, false otherwise.
      */
     fun terminate(): Boolean {
-        return _terminate() >= 0
+        for (user in users) {
+            user.onShutdown()
+        }
+        return _terminate() >= 0 // finally, terminate pigpio
     }
+
     private external fun _terminate(): Int
 
     /**
@@ -38,6 +86,7 @@ object GPIO {
         validateGpioPinNum(gpio)
         return _setMode(gpio, mode.value) >= 0
     }
+
     private external fun _setMode(gpio: Int, mode: Int): Int
 
     /**
@@ -56,6 +105,7 @@ object GPIO {
         }
         throw IllegalStateException("Unknown mode returned from native _getMode")
     }
+
     private external fun _getmode(gpio: Int): Int
 
     /**
@@ -75,6 +125,7 @@ object GPIO {
             Level.ERROR
         }
     }
+
     private external fun _read(gpio: Int): Int
 
     /**
@@ -89,6 +140,7 @@ object GPIO {
         require(level != Level.ERROR) { "Must write either ON or OFF" }
         return _write(gpio, level.value) >= 0
     }
+
     private external fun _write(gpio: Int, level: Int): Int
 
     /**
@@ -99,6 +151,7 @@ object GPIO {
     fun waveClear(): Boolean {
         return _waveClear() >= 0
     }
+
     private external fun _waveClear(): Int
 
     /**
@@ -116,6 +169,7 @@ object GPIO {
         require(rampFrequencies.size != 0) { "Passed waveRamp arrays cannot be empty" }
         return _waveRamps(gpio, rampFrequencies, rampNSteps) >= 0
     }
+
     private external fun _waveRamps(gpio: Int, rampFrequencies: IntArray, rampNSteps: IntArray): Int
 
     /**
@@ -125,6 +179,7 @@ object GPIO {
     fun waveIsBusy(): Boolean {
         return _waveIsBusy()
     }
+
     private external fun _waveIsBusy(): Boolean
 
     /**
@@ -134,22 +189,5 @@ object GPIO {
     @Throws(IllegalArgumentException::class)
     private fun validateGpioPinNum(gpio: Int) {
         require(!(gpio < 0 || gpio > 27)) { "Invalid GPIO pin number: $gpio" }
-    }
-
-    enum class Level(val value: Int) {
-        ON(1), OFF(0), ERROR(-1);
-    }
-
-    enum class Mode(val value: Int) {
-        PI_INPUT(0), PI_OUTPUT(1), PI_ALT0(4), PI_ALT1(5),
-        PI_ALT2(6), PI_ALT3(7), PI_ALT4(3), PI_ALT5(2);
-    }
-
-    init {
-        try {
-            NativeUtils.loadLibraryFromJar("/lib/gpio.so")
-        } catch (e: IOException) {
-            throw RuntimeException(e.toString())
-        }
     }
 }

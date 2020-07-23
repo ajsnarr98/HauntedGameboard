@@ -2,6 +2,7 @@ package com.ajsnarr.hardware
 
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 
 interface StepperMotor {
 
@@ -25,7 +26,7 @@ interface StepperMotor {
      * Effective steps per revolution given microstep resolution.
      */
     val SPR: Int
-        get() = (DEFAULT_SPR / RESOLUTION).toInt()
+        get() = (DEFAULT_SPR / RESOLUTION).roundToInt()
 
     /**
      * Returns whether or not this motor is moving.
@@ -127,7 +128,8 @@ interface StepperMotor {
     }
 
     /**
-     * Steps given number of steps at the given frequency.
+     * Steps given number of steps at the given frequency. Generally only
+     * intended for internal use.
      *
      * @param steps number of steps to turn
      * @param dir direction to turn
