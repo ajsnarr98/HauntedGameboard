@@ -45,7 +45,7 @@ tasks.jar {
   })
 
   // add lib folder
-  from("/src/lib") {
+  from("src/lib/") {
     into ("lib/")
   }
 }
