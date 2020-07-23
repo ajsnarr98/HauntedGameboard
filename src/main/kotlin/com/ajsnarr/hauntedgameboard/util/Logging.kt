@@ -1,4 +1,4 @@
-package com.ajsnarr.util
+package com.ajsnarr.hauntedgameboard.util
 
 var LOG_LEVEL: LogLevel = LogLevel.DEBUG
 

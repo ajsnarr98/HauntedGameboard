@@ -1,6 +1,5 @@
-package com.ajsnarr.util
+package com.ajsnarr.hauntedgameboard.util
 
-import sun.util.resources.ga.LocaleNames_ga
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.math.abs

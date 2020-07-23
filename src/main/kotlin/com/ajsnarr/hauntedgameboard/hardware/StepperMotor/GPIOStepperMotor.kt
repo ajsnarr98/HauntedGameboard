@@ -1,7 +1,7 @@
-package com.ajsnarr.hardware.StepperMotor
+package com.ajsnarr.hauntedgameboard.hardware.StepperMotor
 
-import com.ajsnarr.hardware.GPIO
-import com.ajsnarr.hardware.GPIOUser
+import com.ajsnarr.hauntedgameboard.hardware.GPIO
+import com.ajsnarr.hauntedgameboard.hardware.GPIOUser
 
 private val CW = GPIO.Level.ON
 private val CCW = GPIO.Level.OFF

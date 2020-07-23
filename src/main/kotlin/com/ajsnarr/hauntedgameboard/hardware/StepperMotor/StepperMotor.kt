@@ -1,4 +1,4 @@
-package com.ajsnarr.hardware.StepperMotor
+package com.ajsnarr.hauntedgameboard.hardware.StepperMotor
 
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.thread

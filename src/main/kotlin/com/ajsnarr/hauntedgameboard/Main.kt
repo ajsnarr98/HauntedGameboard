@@ -1,7 +1,7 @@
-package com.ajsnarr.main
+package com.ajsnarr.hauntedgameboard
 
-import com.ajsnarr.hardware.GPIO;
-import com.ajsnarr.hardware.StepperMotor.NEMA17Stepper
+import com.ajsnarr.hauntedgameboard.hardware.GPIO;
+import com.ajsnarr.hauntedgameboard.hardware.StepperMotor.NEMA17Stepper
 
 fun main(args: Array<String>) {
     println("Hello, world!")

@@ -1,6 +1,6 @@
-package com.ajsnarr.hardware.StepperMotor
+package com.ajsnarr.hauntedgameboard.hardware.StepperMotor
 
-import com.ajsnarr.util.closest
+import com.ajsnarr.hauntedgameboard.util.closest
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

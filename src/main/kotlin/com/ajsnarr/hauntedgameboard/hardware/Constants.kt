@@ -1,4 +1,4 @@
-package com.ajsnarr.hardware
+package com.ajsnarr.hauntedgameboard.hardware
 
 object Constants {
     object StepMot {

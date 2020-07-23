@@ -1,11 +1,11 @@
-package com.ajsnarr.hardware
+package com.ajsnarr.hauntedgameboard.hardware
 
-import com.ajsnarr.util.Cleanable
+import com.ajsnarr.hauntedgameboard.util.Cleanable
 import cz.adamh.utils.NativeUtils
 import java.io.IOException
 
-import com.ajsnarr.util.LogLevel
-import com.ajsnarr.util.LOG_LEVEL
+import com.ajsnarr.hauntedgameboard.util.LogLevel
+import com.ajsnarr.hauntedgameboard.util.LOG_LEVEL
 
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
@@ -52,14 +52,14 @@ object GPIO : Cleanable {
     override fun onShutdown() {
         terminate()
     }
-    
+
     /**
      * Sets the log level within native code.
      */
     fun setLogLevel(logLevel: LogLevel) {
         _setLogLevel(logLevel.value)
     }
-    
+
     private external fun _setLogLevel(logLevel: Int): Int
 
     /**
