@@ -22,7 +22,8 @@ sourceSets {
   main {
     java {
       srcDirs(
-        "src/main/kotlin/"
+              "src/main/kotlin/",
+              "src/main/java/"
       )
     }
   }
@@ -30,7 +31,9 @@ sourceSets {
 
 tasks.jar {
   manifest {
-    attributes("Main-Class" to "com.ajsnarr.main.MainKt")
+    attributes(
+            "Main-Class" to "com.ajsnarr.main.MainKt"
+    )
   }
 
   // To add all of the dependencies
@@ -40,4 +43,9 @@ tasks.jar {
   from({
     configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
   })
+
+  // add lib folder
+  from("/src/lib") {
+    into ("lib/")
+  }
 }

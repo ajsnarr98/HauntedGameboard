@@ -1,6 +1,8 @@
 package com.ajsnarr.hardware;
 
-import java.net.URL;
+import cz.adamh.utils.NativeUtils;
+
+import java.io.IOException;
 
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
@@ -8,8 +10,12 @@ import java.net.URL;
 public class GPIO {
   
   static {
-    System.out.println(GPIO.class.getResource("com/ajsnarr/hardware/GPIO.class"));
-    System.loadLibrary("gpio.so");
+    try {
+      NativeUtils.loadLibraryFromJar("/lib/gpio.so");
+    } catch (IOException e) {
+      throw new RuntimeException(e.toString());
+    }
+//    System.loadLibrary("gpio");
   }
   
   private static native int _initialize();
