@@ -61,11 +61,12 @@ operator fun <T : Number> Number.minus(dec: T): T {
  */
 operator fun <T : Number> Number.compareTo(dec: T): Int {
     // call respective built in Kotlin func
+    // TODO - figure out if this method implementation causes segfault
     return when (this) {
-        is Int -> this.compareTo(dec)
-        is Long -> this.compareTo(dec)
-        is Float -> this.compareTo(dec)
-        is Double -> this.compareTo(dec)
+        is Int -> if (dec is Int) this.compareTo(dec) else throw java.lang.IllegalArgumentException("Number types must match")
+        is Long -> if (dec is Long) this.compareTo(dec) else throw java.lang.IllegalArgumentException("Number types must match")
+        is Float -> if (dec is Float) this.compareTo(dec) else throw java.lang.IllegalArgumentException("Number types must match")
+        is Double -> if (dec is Double) this.compareTo(dec) else throw java.lang.IllegalArgumentException("Number types must match")
         is BigDecimal -> this.compareTo(dec)
         is BigInteger -> this.compareTo(dec)
         else -> throw IllegalStateException("Unknown Number type ${this.javaClass}")

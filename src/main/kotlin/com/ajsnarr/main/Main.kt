@@ -11,12 +11,12 @@ fun main(args: Array<String>) {
         println("Failed to initialize GPIO")
         return
     }
-
+    
     val motor = NEMA17Stepper(dirPin = 20, stepPin = 21)
     motor.rotate(2.0, .75)
 
     println("sleeping...")
-    Thread.sleep(5000)
+    Thread.sleep(50000)
     println("...slept...")
 
     GPIO.onShutdown();

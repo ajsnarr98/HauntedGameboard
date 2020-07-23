@@ -39,6 +39,7 @@ class NEMA17Stepper(dirPin: Int, stepPin: Int) : GPIOStepperMotor(dirPin, stepPi
         if (mid > 0) toCheck.add(frequencies[mid - 1])
         if (mid < frequencies.size - 1) toCheck.add(frequencies[mid + 1])
 
-        return estimate.closest(toCheck)
+        val ret = estimate.closest(toCheck)
+        return ret
     }
 }
