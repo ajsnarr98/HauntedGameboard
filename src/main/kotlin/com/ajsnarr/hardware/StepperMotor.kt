@@ -62,8 +62,8 @@ interface StepperMotor {
      * @return true if success, false if not
      */
     fun rotate(rotations: Double, power: Double, blocking: Boolean = false): Boolean {
-        if (power < 0 || power > 1) {
-            throw IllegalArgumentException("Motor power must be in range [0,1]")
+        if (power < -1 || power > 1) {
+            throw IllegalArgumentException("Motor power must be in range [-1,1]")
         }
         return step((rotations * SPR).toInt(), powerToDir(power), powerToFreq(power), blocking)
     }
