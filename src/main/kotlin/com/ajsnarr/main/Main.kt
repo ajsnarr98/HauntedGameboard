@@ -1,7 +1,7 @@
 package com.ajsnarr.main
 
 import com.ajsnarr.hardware.GPIO;
-import com.ajsnarr.hardware.NEMA17Stepper
+import com.ajsnarr.hardware.StepperMotor.NEMA17Stepper
 
 fun main(args: Array<String>) {
     println("Hello, world!")
@@ -11,10 +11,10 @@ fun main(args: Array<String>) {
         println("Failed to initialize GPIO")
         return
     }
-    
+
     println("sleeping...")
     val motor = NEMA17Stepper(dirPin = 20, stepPin = 21)
-    motor.rotate(50.0, -.5, blocking=true)
+    motor.rotate(50.0, -.5, blocking = true)
     println("...slept...")
 
     GPIO.onShutdown();

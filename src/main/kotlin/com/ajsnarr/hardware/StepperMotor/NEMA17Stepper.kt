@@ -1,4 +1,4 @@
-package com.ajsnarr.hardware
+package com.ajsnarr.hardware.StepperMotor
 
 import com.ajsnarr.util.closest
 import kotlin.math.abs

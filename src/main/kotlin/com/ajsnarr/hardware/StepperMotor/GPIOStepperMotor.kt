@@ -1,4 +1,7 @@
-package com.ajsnarr.hardware
+package com.ajsnarr.hardware.StepperMotor
+
+import com.ajsnarr.hardware.GPIO
+import com.ajsnarr.hardware.GPIOUser
 
 private val CW = GPIO.Level.ON
 private val CCW = GPIO.Level.OFF
@@ -17,7 +20,7 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
         GPIO.setMode(stepPin, GPIO.Mode.PI_OUTPUT)
 
         @Suppress("LeakingThis")
-        GPIO.register(this) // this must be last statement in constructor
+        (GPIO.register(this)) // this must be last statement in constructor
     }
 
     override fun isMoving(): Boolean {
@@ -30,10 +33,10 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
         val dirLvl = if (dir == StepperMotor.Direction.CW) CW else CCW
 
         println("stepping $steps at freq $frequency")
-    
+
         GPIO.write(dirPin, dirLvl)
         val success = GPIO.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
-        
+
         if (success && blocking) {
             // WARNING: this will block until all gpio stepper motors are done,
             //          or any other things using waveform on gpio
@@ -41,7 +44,7 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
                 Thread.sleep(100L)
             }
         }
-        
+
         return success
     }
 
