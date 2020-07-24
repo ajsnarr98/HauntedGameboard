@@ -1,4 +1,4 @@
-package com.ajsnarr.hauntedgameboard.hardware.StepperMotor
+package com.ajsnarr.hauntedgameboard.hardware.steppermotor
 
 import com.ajsnarr.hauntedgameboard.util.closest
 import kotlin.math.abs
