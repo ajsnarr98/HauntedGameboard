@@ -33,6 +33,6 @@ abstract class AbstractLinearRail2D : LinearRail2D {
         val yRot = yDist * rotationsPerY
 
         motX.rotate(xRot, power)
-        motY.rotate(yRot, power, blocking = true)
+        motY.rotate(yRot, power, blocking = true) // blocks until both are done moving
     }
 }
