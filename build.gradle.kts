@@ -2,7 +2,6 @@ plugins {
     application
     kotlin("jvm") version "1.3.70"
     java
-    c
 }
 
 application {
@@ -10,7 +9,7 @@ application {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
+    implementation(kotlin("stdlib"))
     implementation("uk.co.caprica:picam:2.0.2")
 }
 
@@ -32,6 +31,7 @@ sourceSets {
 }
 
 tasks.jar {
+    
     manifest {
         attributes(
             "Main-Class" to "com.ajsnarr.hauntedgameboard.MainKt"
