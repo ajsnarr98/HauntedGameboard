@@ -1,6 +1,5 @@
 package com.ajsnarr.hauntedgameboard.hardware
 
-import com.ajsnarr.hauntedgameboard.util.Cleanable
 import cz.adamh.utils.NativeUtils
 import java.io.IOException
 
@@ -10,7 +9,7 @@ import com.ajsnarr.hauntedgameboard.util.LOG_LEVEL
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
  */
-object GPIO : Cleanable {
+object GPIO : AutoCloseable {
 
     enum class Level(val value: Int) {
         ON(1), OFF(0), ERROR(-1);
@@ -49,7 +48,7 @@ object GPIO : Cleanable {
     /**
      * Cleans up all users and terminates lib.
      */
-    override fun onShutdown() {
+    override fun close() {
         terminate()
     }
 

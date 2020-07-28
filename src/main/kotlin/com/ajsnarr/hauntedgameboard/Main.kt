@@ -16,6 +16,4 @@ fun main(args: Array<String>) {
     val motor = NEMA17Stepper(dirPin = 20, stepPin = 21)
     motor.rotate(50.0, -.5, blocking = true)
     println("...slept...")
-
-    GPIO.onShutdown();
 }
