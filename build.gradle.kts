@@ -11,10 +11,12 @@ application {
 
 dependencies {
     compile(kotlin("stdlib"))
+    implementation("uk.co.caprica:picam:2.0.2")
 }
 
 repositories {
     jcenter()
+    mavenCentral()
     maven { url = uri("https://jitpack.io") }
 }
 
