@@ -7,7 +7,7 @@ LDFLAGS = -shared -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux  
 RM = rm   # rm command
 TARGET_LIB = gpio.so  # target lib
 
-SRCS = com_ajsnarr_hardware_GPIO.c # source files
+SRCS = com_ajsnarr_hauntedgameboard_hardware_GPIO.c # source files
 
 .PHONY: all
 all: ${TARGET_LIB}

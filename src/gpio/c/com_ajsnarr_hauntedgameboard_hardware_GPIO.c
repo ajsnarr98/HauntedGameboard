@@ -21,33 +21,33 @@ extern "C" {
 int logLevel;
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _setLogLevel
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setLogLevel
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1setLogLevel
   (JNIEnv *env, jclass clz, jint logLvl) {
     logLevel = logLvl;
     return logLevel;
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _initialize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1initialize
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1initialize
   (JNIEnv *env, jclass clz) {
     if (logLevel <= INFO) printf("Native: Initializing pigpio\n");
     return gpioInitialise();
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _terminate
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1terminate
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1terminate
   (JNIEnv *env, jclass clz) {
     if (logLevel <= INFO) printf("Native: Terminating pigpio\n");
     gpioTerminate();
@@ -55,55 +55,55 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1terminate
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _setMode
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1setMode
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1setMode
   (JNIEnv *env, jclass clz, jint gpio, jint mode) {
     if (logLevel <= DEBUG) printf("Native: gpioSetMode\n");
     return gpioSetMode((unsigned) gpio, (unsigned) mode);
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _getmode
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1getmode
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1getmode
   (JNIEnv *env, jclass clz, jint gpio) {
     if (logLevel <= DEBUG) printf("Native: gpioGetMode\n");
     return gpioGetMode((unsigned) gpio);
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _read
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1read
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1read
   (JNIEnv *env, jclass clz, jint gpio) {
     if (logLevel <= DEBUG) printf("Native: gpioRead\n");
     return gpioRead((unsigned) gpio);
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _write
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1write
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1write
   (JNIEnv *env, jclass clz, jint gpio, jint level) {
     if (logLevel <= DEBUG) printf("Native: gpioWrite\n");
     return gpioWrite((unsigned) gpio, (unsigned) level);
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _waveClear
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveClear
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1waveClear
   (JNIEnv *env, jclass clz) {
     if (logLevel <= DEBUG) printf("Native: gpioWaveClear\n");
     int result = gpioWaveClear();
@@ -167,11 +167,11 @@ int generate_ramp(jint gpio, jsize nramps, jint *rampFreqs, jint *rampNSteps) {
 }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _waveRamps
  * Signature: (I[I[I)I
  */
-JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveRamps
+JNIEXPORT jint JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1waveRamps
   (JNIEnv *env, jclass clz, jint gpio, jintArray rampFreq, jintArray rampNSteps) {
     
     if (logLevel <= DEBUG) printf("Native: waveRamps\n");
@@ -190,11 +190,11 @@ JNIEXPORT jint JNICALL Java_com_ajsnarr_hardware_GPIO__1waveRamps
   }
 
 /*
- * Class:     com_ajsnarr_hardware_GPIO
+ * Class:     com_ajsnarr_hauntedgameboard_hardware_GPIO
  * Method:    _waveIsBusy
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_ajsnarr_hardware_GPIO__1waveIsBusy
+JNIEXPORT jboolean JNICALL Java_com_ajsnarr_hauntedgameboard_hardware_GPIO__1waveIsBusy
   (JNIEnv *env, jclass clz) {
     if (logLevel <= VERBOSE) printf("Native: gpioWaveTxBusy\n");
     return gpioWaveTxBusy();
