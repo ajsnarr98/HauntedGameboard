@@ -11,12 +11,14 @@ application {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("uk.co.caprica:picam:2.0.2")
+    implementation("opencv:opencv:4.0.0-0")
+
 }
 
 repositories {
     jcenter()
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://clojars.org/repo/") }
 }
 
 sourceSets {
@@ -31,7 +33,7 @@ sourceSets {
 }
 
 tasks.jar {
-    
+
     manifest {
         attributes(
             "Main-Class" to "com.ajsnarr.hauntedgameboard.MainKt"
