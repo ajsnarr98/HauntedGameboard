@@ -1,4 +1,6 @@
 package com.ajsnarr.hauntedgameboard.vision.chessboard
 
-class CheckersRecognition : AbstractChessboardRecognition() {
+import com.ajsnarr.hauntedgameboard.hardware.camera.Camera
+
+class CheckersRecognition(camera: Camera) : AbstractChessboardRecognition(camera) {
 }
