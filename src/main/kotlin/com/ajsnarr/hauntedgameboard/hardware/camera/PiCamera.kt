@@ -60,4 +60,8 @@ open class PiCamera(config: Configuration) : Camera {
             camera.takePicture(FilePictureCaptureHandler(saveTo), captureMillis)
         }
     }
+
+    override fun close() {
+        camera.close()
+    }
 }

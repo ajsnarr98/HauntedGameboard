@@ -5,11 +5,12 @@ import java.io.IOException
 
 import com.ajsnarr.hauntedgameboard.util.LogLevel
 import com.ajsnarr.hauntedgameboard.util.LOG_LEVEL
+import java.io.Closeable
 
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
  */
-object GPIO : AutoCloseable {
+object GPIO : Closeable {
 
     enum class Level(val value: Int) {
         ON(1), OFF(0), ERROR(-1);

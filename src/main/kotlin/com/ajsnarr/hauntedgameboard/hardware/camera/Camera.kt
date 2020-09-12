@@ -1,4 +1,6 @@
 package com.ajsnarr.hauntedgameboard.hardware.camera
 
-interface Camera {
+import java.io.Closeable
+
+interface Camera : Closeable {
 }
