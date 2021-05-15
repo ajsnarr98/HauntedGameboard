@@ -5,7 +5,7 @@ import com.ajsnarr.hauntedgameboard.hardware.camera.PiCamera
 import uk.co.caprica.picam.CameraException
 import java.io.File
 
-
+@Suppress("WarningOnMainUnusedParameterMigration")
 fun main(args: Array<String>) {
     println("Hello, world!")
 

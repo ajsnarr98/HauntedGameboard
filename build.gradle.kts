@@ -1,6 +1,6 @@
 plugins {
     application
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.5.0"
     java
 }
 
@@ -16,7 +16,6 @@ dependencies {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
     maven { url = uri("https://clojars.org/repo/") }
 }
