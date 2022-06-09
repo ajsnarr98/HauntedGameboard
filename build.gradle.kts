@@ -1,11 +1,17 @@
 plugins {
     application
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.6.10"
     java
 }
 
+val glBasePackageName = "com.ajsnarr.hauntedgameboard"
+val glMainClassName = "$glBasePackageName.MainKt"
+
+group = glBasePackageName
+version = "alpha-1.0"
+
 application {
-    mainClassName = "com.ajsnarr.hauntedgameboard.MainKt"
+    mainClassName = glMainClassName
 }
 
 dependencies {
@@ -31,15 +37,24 @@ sourceSets {
     }
 }
 
-tasks.jar {
+tasks.test {
+    useJUnitPlatform()
+}
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+tasks.jar {
     manifest {
         attributes(
-            "Main-Class" to "com.ajsnarr.hauntedgameboard.MainKt"
+            "Main-Class" to glMainClassName
         )
     }
 
-    // To add all of the dependencies
+    // add all the dependencies
     from(sourceSets.main.get().output)
 
     dependsOn(configurations.runtimeClasspath)
