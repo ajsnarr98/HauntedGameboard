@@ -1,20 +1,22 @@
 package com.github.ajsnarr98.hauntedgameboard.hardware.rails
 
+import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 import com.github.ajsnarr98.hauntedgameboard.hardware.steppermotor.NEMA17Stepper
 import com.github.ajsnarr98.hauntedgameboard.hardware.steppermotor.StepperMotor
 
 /**
  * 2D Rail system using two NEMA 17 Stepper motors.
  *
+ * @param gpio gpio implementation
  * @param dirPinX gpio pin for x motor direction
  * @param stepPinX gpio pin for x motor step
  * @param dirPinY gpio pin for y motor direction
  * @param stepPinY gpio pin for y motor step
  */
-class NEMA17Rails(dirPinX: Int, stepPinX: Int, dirPinY: Int, stepPinY: Int) : AbstractLinearRail2D() {
+class NEMA17Rails(gpio: GPIOInterface, dirPinX: Int, stepPinX: Int, dirPinY: Int, stepPinY: Int) : AbstractLinearRail2D() {
 
-    override val motX: StepperMotor = NEMA17Stepper(dirPin = dirPinX, stepPin = stepPinX)
-    override val motY: StepperMotor = NEMA17Stepper(dirPin = dirPinY, stepPin = stepPinY)
+    override val motX: StepperMotor = NEMA17Stepper(gpio = gpio, dirPin = dirPinX, stepPin = stepPinX)
+    override val motY: StepperMotor = NEMA17Stepper(gpio = gpio, dirPin = dirPinY, stepPin = stepPinY)
 
     override val rotationsPerX: Double
         get() = TODO("Not yet implemented")

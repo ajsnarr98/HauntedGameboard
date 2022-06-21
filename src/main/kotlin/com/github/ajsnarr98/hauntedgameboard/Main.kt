@@ -1,7 +1,8 @@
 package com.github.ajsnarr98.hauntedgameboard
 
-import com.github.ajsnarr98.hauntedgameboard.hardware.GPIO
+import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.PiCamera
+import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 import uk.co.caprica.picam.CameraException
 import java.io.File
 
@@ -9,7 +10,9 @@ import java.io.File
 fun main(args: Array<String>) {
     println("Hello, world!")
 
-    val isInit = GPIO.initialize();
+    val gpio: GPIOInterface = RealGPIO
+
+    val isInit = gpio.initialize();
     if (!isInit) {
         println("Failed to initialize GPIO")
         return
@@ -30,5 +33,5 @@ fun main(args: Array<String>) {
 //    motor.rotate(50.0, -.5, blocking = true)
 //    println("...slept...")
 
-    GPIO.close()
+    RealGPIO.close()
 }

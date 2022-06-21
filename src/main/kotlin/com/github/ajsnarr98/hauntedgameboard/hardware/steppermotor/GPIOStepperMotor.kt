@@ -1,7 +1,7 @@
 package com.github.ajsnarr98.hauntedgameboard.hardware.steppermotor
 
-import com.github.ajsnarr98.hauntedgameboard.hardware.GPIO
-import com.github.ajsnarr98.hauntedgameboard.hardware.GPIOUser
+import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIO
+import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 
 private val CW = GPIO.Level.ON
 private val CCW = GPIO.Level.OFF
@@ -10,23 +10,28 @@ private val CCW = GPIO.Level.OFF
  * A stepper motor controlled through the raspberry pi GPIO pins and a
  * controller board.
  *
+ * @property gpio gpio interface implementation
  * @property dirPin GPIO pin for direction
  * @property stepPin GPIO pin for stepping
  */
-abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: Int) : StepperMotor, GPIOUser {
+abstract class GPIOStepperMotor(
+    private val gpio: GPIOInterface,
+    private val dirPin: Int,
+    private val stepPin: Int
+) : StepperMotor, GPIO.User {
 
     init {
-        GPIO.setMode(dirPin, GPIO.Mode.PI_OUTPUT)
-        GPIO.setMode(stepPin, GPIO.Mode.PI_OUTPUT)
+        gpio.setMode(dirPin, GPIO.Mode.PI_OUTPUT)
+        gpio.setMode(stepPin, GPIO.Mode.PI_OUTPUT)
 
         @Suppress("LeakingThis")
-        (GPIO.register(this)) // this must be last statement in constructor
+        (gpio.registerUser(this)) // this must be last statement in constructor
     }
 
     override fun isMoving(): Boolean {
         // NOTE: this will return true if ANY GPIO stepper motor is moving
         //       or anything else that uses waves
-        return GPIO.waveIsBusy()
+        return gpio.waveIsBusy()
     }
 
     override fun step(steps: Int, dir: StepperMotor.Direction, frequency: Int, blocking: Boolean): Boolean {
@@ -34,8 +39,8 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
 
         println("stepping $steps at freq $frequency")
 
-        GPIO.write(dirPin, dirLvl)
-        val success = GPIO.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
+        gpio.write(dirPin, dirLvl)
+        val success = gpio.waveRamps(stepPin, intArrayOf(frequency), intArrayOf(steps));
 
         if (success && blocking) {
             // WARNING: this will block until all gpio stepper motors are done,
@@ -51,11 +56,11 @@ abstract class GPIOStepperMotor(private val dirPin: Int, private val stepPin: In
     override fun stop() {
         // NOTE: this will stop ANY GPIO stepper motor or anything else that
         //       uses waves
-        GPIO.waveClear()
+        gpio.waveClear()
     }
 
     override fun onShutdown() {
-        GPIO.write(dirPin, GPIO.Level.OFF)
-        GPIO.waveClear()
+        gpio.write(dirPin, GPIO.Level.OFF)
+        gpio.waveClear()
     }
 }
