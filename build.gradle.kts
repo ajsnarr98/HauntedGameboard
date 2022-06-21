@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-val glBasePackageName = "com.ajsnarr.hauntedgameboard"
+val glBasePackageName = "com.github.ajsnarr98.hauntedgameboard"
 val glMainClassName = "$glBasePackageName.MainKt"
 
 group = glBasePackageName
