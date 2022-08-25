@@ -16,9 +16,11 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+
     implementation("uk.co.caprica:picam:2.0.2")
     implementation("opencv:opencv:4.0.0-0")
-
 }
 
 repositories {

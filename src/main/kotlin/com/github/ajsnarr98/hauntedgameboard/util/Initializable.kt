@@ -4,5 +4,5 @@ interface Initializable {
     /**
      * Initialize and return true if successful.
      */
-    fun initialize(): Boolean
+    suspend fun initialize(): Boolean
 }

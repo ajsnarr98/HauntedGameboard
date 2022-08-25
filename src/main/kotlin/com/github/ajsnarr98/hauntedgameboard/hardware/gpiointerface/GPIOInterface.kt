@@ -44,7 +44,7 @@ interface GPIOInterface : Closeable, Initializable {
      *
      * @return true if successful, false otherwise.
      */
-    override fun initialize(): Boolean
+    override suspend fun initialize(): Boolean
 
     /**
      * Sets the GPIO mode, typically input or output.

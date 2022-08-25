@@ -3,6 +3,7 @@ package com.github.ajsnarr98.hauntedgameboard
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.PiCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
+import kotlinx.coroutines.runBlocking
 import uk.co.caprica.picam.CameraException
 import java.io.File
 
@@ -12,7 +13,7 @@ fun main(args: Array<String>) {
 
     val gpio: GPIOInterface = RealGPIO
 
-    val isInit = gpio.initialize();
+    val isInit = runBlocking { gpio.initialize() }
     if (!isInit) {
         println("Failed to initialize GPIO")
         return
