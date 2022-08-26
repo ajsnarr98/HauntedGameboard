@@ -129,7 +129,7 @@ int LibcameraUsage::AcquireCamera() {
   }
 
   // grab the first camera
-  std::string const &cam_id = cameras[options_->camera]->id();
+  std::string const &cam_id = cameras[0]->id();
 	camera_ = camera_manager_->get(cam_id);
 	if (!camera_) {
 		loge("failed to find camera " + cam_id);
@@ -244,15 +244,16 @@ int LibcameraUsage::StartCapture() {
 	// We don't overwrite anything the application may have set before calling us.
 	
   // crop size
-  Rectangle sensor_area = *camera_->properties().get(properties::ScalerCropMaximum);
-  int x = options_->roi_x * sensor_area.width;
-  int y = options_->roi_y * sensor_area.height;
-  int w = options_->roi_width * sensor_area.width;
-  int h = options_->roi_height * sensor_area.height;
-  Rectangle crop(x, y, w, h);
-  crop.translateBy(sensor_area.topLeft());
-  log("Using crop " + crop.toString());
-  controls_.set(controls::ScalerCrop, crop);
+//  Rectangle sensor_area = *camera_->properties().get(properties::ScalerCropMaximum);
+//  float roi_x, roi_y, roi_width, roi_height = 0;
+//  int x = roi_x * sensor_area.width;
+//  int y = roi_y * sensor_area.height;
+//  int w = roi_width * sensor_area.width;
+//  int h = roi_height * sensor_area.height;
+//  Rectangle crop(x, y, w, h);
+//  crop.translateBy(sensor_area.topLeft());
+//  log("Using crop " + crop.toString());
+//  controls_.set(controls::ScalerCrop, crop);
 
   // For stills capture we set it
 	// as long as possible so that we get whatever the exposure profile wants.

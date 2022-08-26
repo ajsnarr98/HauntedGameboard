@@ -131,8 +131,8 @@ public:
 
 //	Stream *StillStream(StreamInfo *info = nullptr) const;
 
-protected:
-	std::unique_ptr<Options> options_;
+//protected:
+//	std::unique_ptr<Options> options_;
 
 private:
 	std::unique_ptr<CameraManager> camera_manager_;
