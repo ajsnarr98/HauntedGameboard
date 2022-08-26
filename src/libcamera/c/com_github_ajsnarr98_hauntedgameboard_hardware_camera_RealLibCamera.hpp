@@ -129,7 +129,7 @@ public:
 	int CleanupAndStopCapture();
 	void Wait();
 
-	Stream *StillStream(StreamInfo *info = nullptr) const;
+//	Stream *StillStream(StreamInfo *info = nullptr) const;
 
 protected:
 	std::unique_ptr<Options> options_;

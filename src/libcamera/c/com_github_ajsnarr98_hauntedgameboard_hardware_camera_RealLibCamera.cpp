@@ -178,10 +178,6 @@ std::string const &LibcameraApp::CameraId() const {
 	return camera_->id();
 }
 
-libcamera::Stream *LibcameraApp::StillStream(StreamInfo *info) const {
-	return still_stream_;
-}
-
 int LibcameraUsage::setupCapture() {
   CameraConfiguration::Status validation = configuration_->validate();
 	if (validation == CameraConfiguration::Invalid) {
