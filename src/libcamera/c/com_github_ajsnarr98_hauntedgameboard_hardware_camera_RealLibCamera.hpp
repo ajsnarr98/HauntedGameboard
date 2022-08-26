@@ -8,11 +8,11 @@
 
 #include <sys/mman.h>
 
-#include <condition_variable>
 #include <iostream>
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <semaphore>
 #include <set>
 #include <string>
 #include <thread>
@@ -99,6 +99,7 @@ public:
 	using BufferMap = Request::BufferMap;
 	using Size = libcamera::Size;
 	using Rectangle = libcamera::Rectangle;
+	using Sema = std::counting_semaphore<127>;
 
 	// Error codes
 	static constexpr int SUCCESS = 0;
@@ -146,7 +147,7 @@ private:
 	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
 	std::mutex completed_requests_mutex_;
-	std::counting_semaphore camera_requests_active(0);
+	Sema camera_requests_active(0);
 	ControlList controls_;
 	Stream still_stream_;
 
