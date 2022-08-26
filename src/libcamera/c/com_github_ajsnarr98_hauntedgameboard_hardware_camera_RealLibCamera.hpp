@@ -143,7 +143,7 @@ private:
 	std::map<FrameBuffer *, std::vector<libcamera::Span<uint8_t>>> mapped_buffers_;
 	std::map<Stream *, std::queue<FrameBuffer *>> frame_buffers_;
 	std::vector<std::unique_ptr<Request>> requests_;
-	std::set<CompletedRequest *> completed_requests_;
+	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
 	std::mutex completed_requests_mutex_;
 	std::counting_semaphore<127> camera_requests_active(0);
