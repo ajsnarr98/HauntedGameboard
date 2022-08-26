@@ -174,9 +174,12 @@ int LibcameraUsage::Configure() {
   return ret;
 }
 
-std::string const &LibcameraApp::CameraId() const
-{
+std::string const &LibcameraApp::CameraId() const {
 	return camera_->id();
+}
+
+libcamera::Stream *LibcameraApp::StillStream(StreamInfo *info) const {
+	return still_stream_;
 }
 
 int LibcameraUsage::setupCapture() {

@@ -46,6 +46,7 @@ hs_err_pid*
 
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/kotlinc.xml
 
 ### Gradle ###
 .gradle/*
@@ -60,3 +61,8 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Cmake
+#CMakeFiles/
+#CMakeCache.txt
+#cmake_install.cmake
