@@ -13,7 +13,7 @@ SRCS = com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.cpp #
 all: ${TARGET_LIB}
 
 $(TARGET_LIB): $(SRCS)
-        $(CC) ${LDFLAGS} ${CFLAGS} ${SRCS} -o ${TARGET_LIB}
+	$(CC) ${LDFLAGS} ${CFLAGS} ${SRCS} -o ${TARGET_LIB}
 
 clean:
-        -${RM} ${TARGET_LIB} $(SRCS:.c=.d)
+	-${RM} ${TARGET_LIB} $(SRCS:.c=.d)
