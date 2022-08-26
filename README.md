@@ -3,8 +3,8 @@ Code for a physical gameboard that can move pieces and play against you on its o
 
 ## Native lib compilation instructions
 
-# pigpio interface
+### pigpio interface
 
-# libcamera interface
+### libcamera interface
 
 TODO: look at these docs https://www.raspberrypi.com/documentation/accessories/camera.html#building-libcamera-and-libcamera-apps
