@@ -146,7 +146,7 @@ private:
 	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
 	std::mutex completed_requests_mutex_;
-	std::counting_semaphore<127> camera_requests_active(0);
+	std::counting_semaphore camera_requests_active(0);
 	ControlList controls_;
 	Stream still_stream_;
 
