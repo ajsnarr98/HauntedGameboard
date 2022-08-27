@@ -15,7 +15,6 @@
 #include <queue>
 #include <set>
 #include <string>
-#include <semaphore>
 #include <thread>
 #include <variant>
 
@@ -147,7 +146,9 @@ private:
 	std::vector<std::unique_ptr<Request>> requests_;
 	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
-	std::mutex completed_requests_mutex_;
+	std::mutex requests_mutex_;
+	int num_requests_completed_ = 0;
+	std::condition_variable requests_cond_;
 	Sema camera_requests_active(0);
 	ControlList controls_;
 	Stream still_stream_;

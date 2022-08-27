@@ -316,11 +316,10 @@ int CleanupAndStopCapture() {
 		camera_->requestCompleted.disconnect(this, &LibcameraUsage::requestComplete);
   }
 
-	// An application might be holding a CompletedRequest, so queueRequest will get
-	// called to delete it later, but we need to know not to try and re-queue it.
 	completed_requests_.clear();
 
 	requests_.clear();
+	num_requests_completed_ = 0;
 
 	controls_.clear(); // no need for mutex here
 
@@ -329,9 +328,14 @@ int CleanupAndStopCapture() {
 
 void LibcameraUsage::requestComplete(Request *request) {
 
+  std::lock_guard<std::mutex> lock(requests_mutex_);
+
+  num_requests_completed_++;
+
   if (request->status() == Request::RequestCancelled)
 		return;
 
+  completed_requests_.insert(request);
 }
 
 void LibcameraUsage::makeRequests()
