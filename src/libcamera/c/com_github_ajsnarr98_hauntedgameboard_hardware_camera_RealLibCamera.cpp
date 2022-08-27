@@ -10,7 +10,7 @@ std::string const &LOG_PREFIX = "Libcamera: ";
 void log(const std::string& input)
 {
   if (showDebugLog) {
-    std::cout << (LOG_PREFIX + input) << endl;
+    std::cout << (LOG_PREFIX + input) << std::endl;
   }
 }
 
