@@ -100,7 +100,7 @@ public:
 	using BufferMap = Request::BufferMap;
 	using Size = libcamera::Size;
 	using Rectangle = libcamera::Rectangle;
-	using Sema = std::counting_semaphore<1>;
+	using Sema = std::counting_semaphore;
 
 	// Error codes
 	static constexpr int SUCCESS = 0;
