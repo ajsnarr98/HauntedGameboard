@@ -9,6 +9,7 @@
 #include <sys/mman.h>
 
 #include <condition_variable>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <mutex>
