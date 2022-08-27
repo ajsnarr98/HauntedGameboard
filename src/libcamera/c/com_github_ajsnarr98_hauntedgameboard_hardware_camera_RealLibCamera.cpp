@@ -5,7 +5,7 @@
 
 bool showDebugLog = true;
 
-std::string const &LOG_PREFIX = "Libcamera: ";
+const std::string& LOG_PREFIX = "Libcamera: ";
 
 void log(const std::string& input)
 {
@@ -16,7 +16,8 @@ void log(const std::string& input)
 
 void loge(const std::string& input)
 {
-    fprintf(stderr, LOG_PREFIX + input);
+    std::string& outpt = LOG_PREFIX + input
+    fprintf(stderr, outpt);
 }
 
 /*
