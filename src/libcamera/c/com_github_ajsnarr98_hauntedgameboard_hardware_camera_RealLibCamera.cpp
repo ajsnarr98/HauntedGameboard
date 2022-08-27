@@ -40,6 +40,8 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
     // TODO
+
+    return 0;
 }
 
 /*
@@ -52,6 +54,12 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
     // TODO
+
+    libCameraUsage->CleanupAndStopCapture();
+    libCameraUsage->ReleaseCamera();
+    libCameraUsage->Teardown();
+
+    return libCameraUsage->SUCCESS;
 }
 
 /*
@@ -64,6 +72,8 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
     // TODO
+
+    return 0;
 }
 
 /*
@@ -89,7 +99,7 @@ JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 /* If we definitely appear to be running the old camera stack, return false.
  * Everything else, Pi or not, we let through.
  */
-static boolean check_camera_stack()
+static bool check_camera_stack()
 {
 	int fd = open("/dev/video0", O_RDWR, 0);
 	if (fd < 0)
@@ -142,7 +152,7 @@ int LibcameraUsage::AcquireCamera() {
   }
 	camera_acquired_ = true;
   log("Acquired camera " + cam_id);
-  return SUCCESS
+  return SUCCESS;
 }
 
 int LibcameraUsage::ReleaseCamera() {
@@ -153,6 +163,7 @@ int LibcameraUsage::ReleaseCamera() {
 
   camera_.reset();
 	camera_manager_.reset();
+	return SUCCESS;
 }
 
 int LibcameraUsage::Configure() {
@@ -174,7 +185,7 @@ int LibcameraUsage::Configure() {
   return ret;
 }
 
-std::string const &LibcameraApp::CameraId() const {
+std::string const &LibcameraUsage::CameraId() const {
 	return camera_->id();
 }
 
@@ -298,7 +309,7 @@ int LibcameraUsage::StartCapture() {
   return SUCCESS;
 }
 
-int CleanupAndStopCapture() {
+int LibcameraUsage::CleanupAndStopCapture() {
   {
 		// We don't want QueueRequest to run asynchronously while we stop the camera.
 		std::lock_guard<std::mutex> lock(camera_stop_mutex_);
@@ -324,6 +335,8 @@ int CleanupAndStopCapture() {
 	controls_.clear(); // no need for mutex here
 
   log("Camera capture stopped/cleaned up!");
+
+  return SUCCESS;
 }
 
 void LibcameraUsage::requestComplete(Request *request) {
@@ -338,7 +351,7 @@ void LibcameraUsage::requestComplete(Request *request) {
   completed_requests_.insert(request);
 }
 
-void LibcameraUsage::makeRequests()
+int LibcameraUsage::makeRequests()
 {
 	auto free_buffers(frame_buffers_);
 	while (true)
