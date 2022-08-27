@@ -16,8 +16,7 @@ void log(const std::string& input)
 
 void loge(const std::string& input)
 {
-    const std::string& outpt = LOG_PREFIX + input;
-    fprintf(stderr, outpt);
+    fprintf(stderr, (LOG_PREFIX + input).c_str());
 }
 
 /*
