@@ -27,7 +27,7 @@ void loge(const std::string& input)
 JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_showDebugLog
   (JNIEnv *env, jclass clz, jboolean shouldShowDebugLog) {
 
-    showDebugLog = shouldShowDebugLog
+    showDebugLog = shouldShowDebugLog;
 }
 
 /*
