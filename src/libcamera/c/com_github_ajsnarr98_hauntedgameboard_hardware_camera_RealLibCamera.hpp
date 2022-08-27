@@ -99,7 +99,6 @@ public:
 	using BufferMap = Request::BufferMap;
 	using Size = libcamera::Size;
 	using Rectangle = libcamera::Rectangle;
-	using Sema = std::counting_semaphore;
 
 	// Error codes
 	static constexpr int SUCCESS = 0;
@@ -149,7 +148,6 @@ private:
 	std::mutex requests_mutex_;
 	int num_requests_completed_ = 0;
 	std::condition_variable requests_cond_;
-	Sema camera_requests_active(0);
 	ControlList controls_;
 	Stream still_stream_;
 
