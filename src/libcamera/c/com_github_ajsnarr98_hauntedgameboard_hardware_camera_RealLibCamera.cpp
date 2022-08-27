@@ -3,6 +3,10 @@
 
 #include "com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.hpp"
 
+#include <fcntl.h>
+
+#include <sys/ioctl.h>
+
 bool showDebugLog = true;
 
 const std::string& LOG_PREFIX = "Libcamera: ";
