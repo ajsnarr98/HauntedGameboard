@@ -4,6 +4,7 @@
 #include "com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.hpp"
 
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <sys/ioctl.h>
 #include <linux/videodev2.h>

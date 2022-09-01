@@ -18,7 +18,6 @@
 #include <set>
 #include <string>
 #include <thread>
-#include <unistd>
 #include <variant>
 
 #include <libcamera/base/span.h>
