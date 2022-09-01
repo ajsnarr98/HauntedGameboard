@@ -9,6 +9,7 @@
 #include <sys/mman.h>
 
 #include <condition_variable>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -17,6 +18,7 @@
 #include <set>
 #include <string>
 #include <thread>
+#include <unistd>
 #include <variant>
 
 #include <libcamera/base/span.h>
