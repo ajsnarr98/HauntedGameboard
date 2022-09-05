@@ -62,7 +62,6 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# Cmake
-#CMakeFiles/
-#CMakeCache.txt
-#cmake_install.cmake
+# Share libraries
+gpio.so
+libcamera.so
