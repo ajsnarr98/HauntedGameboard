@@ -147,11 +147,12 @@ private:
 	std::vector<std::unique_ptr<Request>> requests_;
 	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
+	std::mutex camera_stop_mutex_;
 	std::mutex requests_mutex_;
 	int num_requests_completed_ = 0;
 	std::condition_variable requests_cond_;
 	ControlList controls_;
-	Stream still_stream_;
+	Stream *still_stream_;
 
 	int setupCapture();
 	int makeRequests();

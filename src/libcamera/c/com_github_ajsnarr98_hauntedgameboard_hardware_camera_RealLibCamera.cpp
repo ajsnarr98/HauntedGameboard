@@ -45,6 +45,10 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   (JNIEnv *env, jclass clz, jlong thiz) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
+
+    if (!check_camera_stack()) {
+        // return TODO
+    }
     // TODO
 
     return 0;
@@ -294,7 +298,7 @@ int LibcameraUsage::StartCapture() {
 
   if (camera_->start(&controls_)) {
 		loge("failed to start camera");
-    return ERR_FAILED_TO_START_CAMERA
+    return ERR_FAILED_TO_START_CAMERA;
   }
 
   camera_->requestCompleted.connect(this, &LibcameraUsage::requestComplete);
@@ -413,8 +417,6 @@ void LibcameraUsage::Teardown() {
 	configuration_.reset();
 
 	frame_buffers_.clear();
-
-	streams_.clear();
 }
 
 #endif
