@@ -4,6 +4,11 @@
 
 
 # GPIO
+echo ''
+echo '--------------------------------'
+echo 'Compiling GPIO Interface'
+echo '--------------------------------'
+
 # make shared lib
 cd src/gpio/c
 make
@@ -13,6 +18,11 @@ cd ../../..
 mv src/gpio/c/gpio.so src/lib/gpio.so
 
 # LibCamera
+echo ''
+echo '--------------------------------'
+echo 'Compiling LibCamera Interface'
+echo '--------------------------------'
+
 # make shared lib
 cd src/libcamera/c
 make
