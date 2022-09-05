@@ -2,6 +2,7 @@
 
 # this script should be run from the project home directory
 
+mkdir -p src/lib/
 
 # GPIO
 echo ''
