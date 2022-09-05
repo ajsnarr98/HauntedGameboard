@@ -13,6 +13,8 @@ bool showDebugLog = true;
 
 const std::string& LOG_PREFIX = "Libcamera: ";
 
+static bool check_camera_stack();
+
 void log(const std::string& input)
 {
   if (showDebugLog) {
