@@ -3,7 +3,7 @@
 
 CC = g++  # C++ compiler
 CFLAGS = -fPIC -Wall -Wextra -pedantic -Wno-unused-parameter -faligned-new -std=gnu++17  # C flags
-LDFLAGS = -shared -Wl, -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -I/usr/include/libcamera   # linking flags
+LDFLAGS = -shared -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -I/usr/include/libcamera   # linking flags
 RM = rm   # rm command
 TARGET_LIB = libcamera.so  # target lib
 
