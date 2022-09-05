@@ -312,7 +312,7 @@ int LibcameraUsage::StartCapture() {
 	{
 		if (camera_->queueRequest(request.get()) < 0) {
 			loge("Failed to queue request");
-      CleanupAndStopCapture()
+      CleanupAndStopCapture();
       return ERR_CAMERA_FAILED_TO_QUEUE_REQUEST;
     }
 	}
