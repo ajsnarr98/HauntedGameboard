@@ -104,8 +104,8 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     }
 
     // get image params
-    Stream *stream = libCameraUsage->StillStream();
-    StreamConfiguration const &config = stream->configuration();
+    libcamera::Stream *stream = libCameraUsage->StillStream();
+    libcamera::StreamConfiguration const &config = stream->configuration();
     unsigned int width = config.size.width;
     unsigned int height = config.size.height;
     unsigned int stride = config.stride;
@@ -114,7 +114,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     libCameraUsage->CleanupAndStopCapture();
 
-    if ((info.width & 1) || (info.height & 1)) {
+    if ((width & 1) || (height & 1)) {
        loge("Both width and height of image must be even");
        return libCameraUsage->ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN;
     }
