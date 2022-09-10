@@ -5,7 +5,8 @@ import com.github.ajsnarr98.hauntedgameboard.util.closest
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class NEMA17Stepper(gpio: GPIOInterface, dirPin: Int, stepPin: Int) : GPIOStepperMotor(gpio, dirPin, stepPin) {
+class NEMA17Stepper(gpio: GPIOInterface, dirPin: Int, stepPin: Int) :
+    GPIOStepperMotor(gpio, dirPin, stepPin) {
 
     /** ordered greatest to least */
     private val frequencies = intArrayOf(

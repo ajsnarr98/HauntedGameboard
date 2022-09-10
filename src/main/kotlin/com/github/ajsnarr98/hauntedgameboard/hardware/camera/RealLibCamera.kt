@@ -3,20 +3,30 @@ package com.github.ajsnarr98.hauntedgameboard.hardware.camera
 import cz.adamh.utils.NativeUtils
 import org.opencv.core.Mat
 import java.io.IOException
-import kotlin.coroutines.Continuation
 
 class RealLibCamera : Camera {
+
+    enum class ErrorCode(val code: Int) {
+        SUCCESS(code = 0),
+    }
 
     private var memAllocated = true
     private val acquiredCamera = false
     private val cxxThis: Long = cxxConstruct() // using the "store pointers as longs" convention
 
     override suspend fun initialize(): Boolean {
-        return false
+        return acquireCamera(cxxThis) == ErrorCode.SUCCESS.code
     }
 
     override suspend fun takePicture(): Mat {
-        TODO("Not yet implemented")
+        val rawPicture = RawPicture()
+        val err = takePicture(cxxThis, rawPicture)
+        if (err != ErrorCode.SUCCESS.code) {
+            // TODO
+        }
+        println("Picture with width, height (${rawPicture.width}, ${rawPicture.height})")
+        // TODO
+        return Mat()
     }
 
     /**
@@ -33,11 +43,9 @@ class RealLibCamera : Camera {
     }
 
     class RawPicture {
-        var pixels: Array<IntArray>
-
-        init {
-            pixels = Array(0) { IntArray(0) }
-        }
+        var pixels: IntArray = IntArray(0) // expected BGR format
+        var width: Int = 0
+        var height: Int = 0
     }
 
     companion object {

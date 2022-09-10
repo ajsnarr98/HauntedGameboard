@@ -1,7 +1,9 @@
 package com.github.ajsnarr98.hauntedgameboard
 
+import com.github.ajsnarr98.hauntedgameboard.hardware.camera.Camera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.PiCamera
+import com.github.ajsnarr98.hauntedgameboard.hardware.camera.RealLibCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 import kotlinx.coroutines.runBlocking
 import uk.co.caprica.picam.CameraException
@@ -19,20 +21,29 @@ fun main(args: Array<String>) {
         return
     }
 
-    println("taking picture...")
-    PiCamera(PiCamera.Configuration().encoding(PiCamera.Encoding.JPEG)).use { camera ->
-        try {
-            camera.capture(File("output.jpg"))
-        } catch (e: CameraException) {
-            e.printStackTrace()
-        }
+    val camera: Camera = RealLibCamera()
+
+//    PiCamera(PiCamera.Configuration().encoding(PiCamera.Encoding.JPEG)).use { camera ->
+//        try {
+//            camera.capture(File("output.jpg"))
+//        } catch (e: CameraException) {
+//            e.printStackTrace()
+//        }
+//    }
+
+    runBlocking {
+        println("initializing camera..")
+        camera.initialize()
+        println("taking picture...")
+        camera.takePicture()
+        println("taken")
     }
-    println("taken..")
 
 //    println("sleeping...")
 //    val motor = NEMA17Stepper(dirPin = 20, stepPin = 21)
 //    motor.rotate(50.0, -.5, blocking = true)
 //    println("...slept...")
 
-    RealGPIO.close()
+    camera.close()
+    gpio.close()
 }

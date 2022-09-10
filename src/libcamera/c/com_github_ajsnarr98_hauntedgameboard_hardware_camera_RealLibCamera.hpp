@@ -14,6 +14,7 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <set>
 #include <string>
@@ -93,6 +94,7 @@ public:
 	using CameraManager = libcamera::CameraManager;
 	using Camera = libcamera::Camera;
 	using CameraConfiguration = libcamera::CameraConfiguration;
+	using ColorSpace = libcamera::ColorSpace;
 	using FrameBufferAllocator = libcamera::FrameBufferAllocator;
 	using StreamRole = libcamera::StreamRole;
 	using StreamRoles = libcamera::StreamRoles;
@@ -117,6 +119,9 @@ public:
 	static constexpr int ERR_REQUEST_COULD_NOT_ADD_BUFFER_TO_REQUEST = 11;
 	static constexpr int ERR_FAILED_TO_START_CAMERA = 12;
 	static constexpr int ERR_CAMERA_FAILED_TO_QUEUE_REQUEST = 13;
+	static constexpr int ERR_CAPTURE_STOPPED = 14;
+	static constexpr int ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN = 14;
+	static constexpr int ERR_NON_SINGLE_PLANE_YUV_FOUND = 14;
 
 	LibcameraUsage();
 
@@ -129,9 +134,9 @@ public:
 	void Teardown();
 	int StartCapture();
 	int CleanupAndStopCapture();
-	void Wait();
+	int Wait();
 
-//	Stream *StillStream(StreamInfo *info = nullptr) const;
+	Stream *StillStream() const;
 
 //protected:
 //	std::unique_ptr<Options> options_;

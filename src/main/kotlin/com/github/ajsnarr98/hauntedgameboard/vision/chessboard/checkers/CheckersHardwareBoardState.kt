@@ -11,7 +11,7 @@ data class CheckersHardwareBoardState(
     val p2ApproximateColor: Color,
 ) : GameState {
 
-    companion object  {
+    companion object {
         const val BOARD_SIZE = 10
     }
 

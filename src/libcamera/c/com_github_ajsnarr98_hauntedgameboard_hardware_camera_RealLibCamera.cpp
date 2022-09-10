@@ -51,9 +51,13 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     if (!check_camera_stack()) {
         // return TODO
     }
-    // TODO
+    int err;
 
-    return 0;
+    err = libCameraUsage->AcquireCamera();
+    err = libCameraUsage->Configure();
+    // TODO handle errors
+
+    return libCameraUsage->SUCCESS;
 }
 
 /*
@@ -85,7 +89,50 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
     // TODO
 
-    return 0;
+    int err;
+    err = libCameraUsage->StartCapture();
+    if (err != libCameraUsage->SUCCESS) {
+      // TODO handle error
+      return err;
+    }
+
+    // wait on capture to finish
+    err = libCameraUsage->Wait();
+    if (err != libCameraUsage->SUCCESS) {
+      // TODO handle error
+      return err;
+    }
+
+    // get image params
+    Stream *stream = libCameraUsage->StillStream();
+    StreamConfiguration const &config = stream->configuration();
+    unsigned int width = config.size.width;
+    unsigned int height = config.size.height;
+    unsigned int stride = config.stride;
+    PixelFormat pixelFormat = config.pixelFormat;
+    std::optional<ColorSpace> colorSpace = config.colorSpace;
+
+    libCameraUsage->CleanupAndStopCapture();
+
+    if ((info.width & 1) || (info.height & 1)) {
+       loge("Both width and height of image must be even");
+       return libCameraUsage->ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN;
+    }
+    // TODO check if buffer is single plane YUV
+    // loge("only single plane YUV supported");
+    // return libCameraUsage->ERR_NON_SINGLE_PLANE_YUV_FOUND;
+
+    // load picture
+    auto jRawPictureClz = env->GetObjectClass(jPicture);
+    auto jWidthFieldId = env->GetFieldID(jRawPictureClz, "width", "I");
+    auto jHeightFieldId = env->GetFieldID(jRawPictureClz, "height", "I");
+
+    env->SetIntField(jPicture, jWidthFieldId, width);
+    env->SetIntField(jPicture, jHeightFieldId, height);
+
+    // TODO load and convert pixels
+
+    return libCameraUsage->SUCCESS;
 }
 
 /*
@@ -341,12 +388,36 @@ int LibcameraUsage::CleanupAndStopCapture() {
 
 	completed_requests_.clear();
 
-	requests_.clear();
-	num_requests_completed_ = 0;
+  {
+    std::lock_guard<std::mutex> lock(requests_mutex_);
+    requests_.clear();
+    num_requests_completed_ = 0;
+    requests_cond_.notify_one();
+  }
 
 	controls_.clear(); // no need for mutex here
 
   log("Camera capture stopped/cleaned up!");
+
+  return SUCCESS;
+}
+
+libcamera::Stream *LibcameraUsage::StillStream() const {
+  return still_stream_;
+}
+
+int LibcameraUsage::Wait() {
+  // wait on capture to finish
+  std::unique_lock<std::mutex> L{requests_mutex_};
+  requests_cond_.wait(L,[&]()
+  {
+    return num_requests_completed_ >= requests_.size();
+  });
+
+  // if the number of requests completed is 0, capture was canceled
+  if (num_requests_completed_ <= 0) {
+    return ERR_CAPTURE_STOPPED;
+  }
 
   return SUCCESS;
 }
@@ -361,6 +432,8 @@ void LibcameraUsage::requestComplete(Request *request) {
 		return;
 
   completed_requests_.insert(request);
+
+  requests_cond_.notify_one();
 }
 
 int LibcameraUsage::makeRequests()
@@ -383,7 +456,10 @@ int LibcameraUsage::makeRequests()
 					loge("failed to make request");
           return ERR_REQUEST_CREATION_FAILED;
         }
-				requests_.push_back(std::move(request));
+        {
+          std::lock_guard<std::mutex> lock(requests_mutex_);
+				  requests_.push_back(std::move(request));
+				}
 			} else if (free_buffers[stream].empty()) {
 				loge("concurrent streams need matching numbers of buffers");
         return ERR_REQUEST_CONCURRENT_STREAMS_WITHOUT_MATCHING_NUMBER_OF_BUFFERS;
@@ -391,9 +467,12 @@ int LibcameraUsage::makeRequests()
 
 			FrameBuffer *buffer = free_buffers[stream].front();
 			free_buffers[stream].pop();
-			if (requests_.back()->addBuffer(stream, buffer) < 0) {
-				loge("failed to add buffer to request");
-        return ERR_REQUEST_COULD_NOT_ADD_BUFFER_TO_REQUEST;
+			{
+			  std::lock_guard<std::mutex> lock(requests_mutex_);
+        if (requests_.back()->addBuffer(stream, buffer) < 0) {
+          loge("failed to add buffer to request");
+          return ERR_REQUEST_COULD_NOT_ADD_BUFFER_TO_REQUEST;
+        }
       }
 		}
 	}
