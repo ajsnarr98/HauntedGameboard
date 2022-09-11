@@ -4,11 +4,6 @@
 #ifndef _Included_com_ajsnarr_hardware_GPIO
 #define _Included_com_ajsnarr_hardware_GPIO
 
-#include <stdio.h>
-#include <string.h>
-
-#include <pigpio.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
