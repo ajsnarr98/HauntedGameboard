@@ -60,6 +60,8 @@ tasks.jar {
         )
     }
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     // add all the dependencies
     from(sourceSets.main.get().output)
 
