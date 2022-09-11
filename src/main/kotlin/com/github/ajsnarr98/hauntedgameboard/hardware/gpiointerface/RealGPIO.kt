@@ -5,7 +5,6 @@ import java.io.IOException
 
 import com.github.ajsnarr98.hauntedgameboard.util.LogLevel
 import com.github.ajsnarr98.hauntedgameboard.util.LOG_LEVEL
-import java.io.Closeable
 
 /**
  * A class containing native methods for communicating with raspberry pi gpio pins.
@@ -48,7 +47,7 @@ object RealGPIO : AbstractGPIOInterface() {
 
     override fun getMode(gpio: Int): GPIO.Mode {
         validateGpioPinNum(gpio)
-        val modeVal = _getmode(gpio)
+        val modeVal = _getMode(gpio)
         for (mode in GPIO.Mode.values()) {
             if (mode.value == modeVal) {
                 return mode
@@ -57,7 +56,7 @@ object RealGPIO : AbstractGPIOInterface() {
         throw IllegalStateException("Unknown mode returned from native _getMode: $modeVal")
     }
 
-    private external fun _getmode(gpio: Int): Int
+    private external fun _getMode(gpio: Int): Int
 
     override fun read(gpio: Int): GPIO.Level {
         validateGpioPinNum(gpio)

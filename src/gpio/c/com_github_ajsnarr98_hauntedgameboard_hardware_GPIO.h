@@ -12,7 +12,7 @@ extern "C" {
  * Method:    _setLogLevel
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1setLogLevel
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1setLogLevel
   (JNIEnv *, jclass, jint);
 
 /*
@@ -20,7 +20,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _initialize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1initialize
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1initialize
   (JNIEnv *, jclass);
 
 /*
@@ -28,7 +28,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _terminate
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1terminate
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1terminate
   (JNIEnv *, jclass);
 
 /*
@@ -36,7 +36,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _setMode
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1setMode
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1setMode
   (JNIEnv *, jclass, jint, jint);
 
 /*
@@ -44,7 +44,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _getmode
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1getmode
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1getMode
   (JNIEnv *, jclass, jint);
 
 /*
@@ -52,7 +52,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _read
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1read
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1read
   (JNIEnv *, jclass, jint);
 
 /*
@@ -60,7 +60,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _write
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1write
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1write
   (JNIEnv *, jclass, jint, jint);
 
 /*
@@ -68,7 +68,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _waveClear
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1waveClear
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1waveClear
   (JNIEnv *, jclass);
 
 /*
@@ -76,7 +76,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _waveRamps
  * Signature: (I[I[I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1waveRamps
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1waveRamps
   (JNIEnv *, jclass, jint, jintArray, jintArray);
 
 /*
@@ -84,7 +84,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO_
  * Method:    _waveIsBusy
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO__1waveIsBusy
+JNIEXPORT jboolean JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1waveIsBusy
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus
