@@ -32,8 +32,8 @@ sourceSets {
     main {
         java {
             srcDirs(
-                "src/main/kotlin/",
-                "src/main/java/"
+                    "src/main/kotlin/",
+                    "src/main/java/"
             )
         }
     }
@@ -43,10 +43,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions {
         jvmTarget = "11"
@@ -56,7 +52,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
 tasks.jar {
     manifest {
         attributes(
-            "Main-Class" to glMainClassName
+                "Main-Class" to glMainClassName
         )
     }
 
