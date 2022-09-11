@@ -341,7 +341,7 @@ int LibcameraUsage::StartCapture() {
 	controls_.set(controls::Brightness, 0);
 	controls_.set(controls::Contrast, 1.0);
 	controls_.set(controls::Saturation, 1.0);
-	controls_.set(controls::Sharpness, 1.0);
+	controls_.set(libcamera::controls::SHARPNESS, 1.0);
 
   // start camera
 
