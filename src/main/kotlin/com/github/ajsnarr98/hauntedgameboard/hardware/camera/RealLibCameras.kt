@@ -4,7 +4,7 @@ import cz.adamh.utils.NativeUtils
 import org.opencv.core.Mat
 import java.io.IOException
 
-class RealLibCamera : Camera {
+class RealLibCameras : Camera {
 
     enum class ErrorCode(val code: Int) {
         SUCCESS(code = 0),
