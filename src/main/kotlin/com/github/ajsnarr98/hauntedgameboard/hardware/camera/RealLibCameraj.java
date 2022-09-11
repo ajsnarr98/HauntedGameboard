@@ -8,7 +8,7 @@ import org.opencv.core.Mat;
 
 import java.io.IOException;
 
-public class RealLibCamera implements Camera {
+public class RealLibCameraj implements Camera {
 
     enum ErrorCode {
         SUCCESS(0);
@@ -32,7 +32,7 @@ public class RealLibCamera implements Camera {
     private boolean acquiredCamera = false;
     private final long cxxThis; // using the "store pointers as longs" convention
 
-    public RealLibCamera() {
+    public RealLibCameraj() {
         this.cxxThis = cxxConstruct();
     }
 
