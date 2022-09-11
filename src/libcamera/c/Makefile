@@ -5,7 +5,7 @@ CC = g++  # C++ compiler
 CFLAGS = -fPIC -Wall -Wextra -pedantic -Wno-unused-parameter -faligned-new -std=gnu++17  # C flags
 LDFLAGS = -shared -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -I/usr/include/libcamera   # linking flags
 RM = rm   # rm command
-TARGET_LIB = libcamera.so  # target lib
+TARGET_LIB = camera.so  # target lib
 
 SRCS = com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.cpp # source files
 

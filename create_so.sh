@@ -30,4 +30,4 @@ make
 
 # move to location
 cd ../../..
-mv src/libcamera/c/libcamera.so src/lib/libcamera.so
+mv src/libcamera/c/camera.so src/lib/camera.so
