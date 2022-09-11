@@ -11,11 +11,15 @@ class RealLibCamera : Camera {
     }
 
     private var memAllocated = true
-    private val acquiredCamera = false
+    private var acquiredCamera = false
     private val cxxThis: Long = cxxConstruct() // using the "store pointers as longs" convention
 
     override suspend fun initialize(): Boolean {
-        return acquireCamera(cxxThis) == ErrorCode.SUCCESS.code
+        val success = acquireCamera(cxxThis) == ErrorCode.SUCCESS.code
+        if (success) {
+            acquiredCamera = true
+        }
+        return success
     }
 
     override suspend fun takePicture(): Mat {

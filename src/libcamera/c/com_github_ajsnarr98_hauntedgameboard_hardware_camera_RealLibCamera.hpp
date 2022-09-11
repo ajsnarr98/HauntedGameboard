@@ -1,4 +1,3 @@
-#include <jni.h>
 /* Header for class com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera */
 
 #ifndef _Included_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera
@@ -31,6 +30,8 @@
 #include <libcamera/property_ids.h>
 
 extern "C" {
+#include <jni.h>
+
 /*
  * Class:     com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera
  * Method:    showDebugLog
