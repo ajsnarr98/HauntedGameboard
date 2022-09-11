@@ -3,8 +3,7 @@
 
 CC = gcc  # C compiler
 CFLAGS = -Wall -O3  # C flags
-LDFLAGS = -shared -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux -Wl, --no-as-needed # linking flags
-#LDFLAGS = -shared -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux  # linking flags
+LDFLAGS = -shared -Wl, --no-as-needed -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux  # linking flags
 RM = rm   # rm command
 TARGET_LIB = gpio.so  # target lib
 
