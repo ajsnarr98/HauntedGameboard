@@ -13,10 +13,10 @@ fun main(args: Array<String>) {
 //    val gpio: GPIOInterface = RealGPIO
 
 //    val isInit = runBlocking { gpio.initialize() }
-    if (!isInit) {
-        println("Failed to initialize GPIO")
-        return
-    }
+//    if (!isInit) {
+//        println("Failed to initialize GPIO")
+//        return
+//    }
 
     val camera: Camera = RealLibCamera()
 
