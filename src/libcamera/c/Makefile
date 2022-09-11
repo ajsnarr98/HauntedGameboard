@@ -7,7 +7,7 @@ LDFLAGS = -shared -Wl,-rpath=/usr/include/,--no-as-needed -lcamera -I${JAVA_HOME
 RM = rm   # rm command
 TARGET_LIB = camera.so  # target lib
 
-SRCS = com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.cpp # source files
+SRCS = com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_Companion.cpp # source files
 
 .PHONY: all
 all: ${TARGET_LIB}
