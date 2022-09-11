@@ -109,7 +109,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     unsigned int width = config.size.width;
     unsigned int height = config.size.height;
     unsigned int stride = config.stride;
-    PixelFormat pixelFormat = config.pixelFormat;
+    libcamera::PixelFormat pixelFormat = config.pixelFormat;
     std::optional<libcamera::ColorSpace> colorSpace = config.colorSpace;
 
     libCameraUsage->CleanupAndStopCapture();
