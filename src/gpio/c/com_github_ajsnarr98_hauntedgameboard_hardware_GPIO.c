@@ -25,7 +25,7 @@ int logLevel;
  * Method:    _setLogLevel
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1setLogLevel
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1setLogLevel
   (JNIEnv *env, jclass clz, jint logLvl) {
     logLevel = logLvl;
     return logLevel;
@@ -36,7 +36,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _initialize
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1initialize
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1initialize
   (JNIEnv *env, jclass clz) {
     if (logLevel <= INFO) printf("Native: Initializing pigpio\n");
     return gpioInitialise();
@@ -47,7 +47,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _terminate
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1terminate
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1terminate
   (JNIEnv *env, jclass clz) {
     if (logLevel <= INFO) printf("Native: Terminating pigpio\n");
     gpioTerminate();
@@ -59,7 +59,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _setMode
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1setMode
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1setMode
   (JNIEnv *env, jclass clz, jint gpio, jint mode) {
     if (logLevel <= DEBUG) printf("Native: gpioSetMode\n");
     return gpioSetMode((unsigned) gpio, (unsigned) mode);
@@ -70,7 +70,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _getmode
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1getMode
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1getMode
   (JNIEnv *env, jclass clz, jint gpio) {
     if (logLevel <= DEBUG) printf("Native: gpioGetMode\n");
     return gpioGetMode((unsigned) gpio);
@@ -81,7 +81,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _read
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1read
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1read
   (JNIEnv *env, jclass clz, jint gpio) {
     if (logLevel <= DEBUG) printf("Native: gpioRead\n");
     return gpioRead((unsigned) gpio);
@@ -92,7 +92,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _write
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1write
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1write
   (JNIEnv *env, jclass clz, jint gpio, jint level) {
     if (logLevel <= DEBUG) printf("Native: gpioWrite\n");
     return gpioWrite((unsigned) gpio, (unsigned) level);
@@ -103,7 +103,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealG
  * Method:    _waveClear
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_RealGPIO__1waveClear
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1waveClear
   (JNIEnv *env, jclass clz) {
     if (logLevel <= DEBUG) printf("Native: gpioWaveClear\n");
     int result = gpioWaveClear();
