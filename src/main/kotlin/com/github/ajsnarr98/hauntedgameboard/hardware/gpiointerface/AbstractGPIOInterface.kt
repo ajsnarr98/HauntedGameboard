@@ -27,7 +27,7 @@ abstract class AbstractGPIOInterface : GPIOInterface {
         terminateConnection()
     }
 
-    override fun initialize(): Boolean {
+    override suspend fun initialize(): Boolean {
         return initializeConnection()
     }
 
