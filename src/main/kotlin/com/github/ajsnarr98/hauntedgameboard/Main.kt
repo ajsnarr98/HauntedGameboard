@@ -2,12 +2,9 @@ package com.github.ajsnarr98.hauntedgameboard
 
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.Camera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
-import com.github.ajsnarr98.hauntedgameboard.hardware.camera.PiCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.RealLibCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 import kotlinx.coroutines.runBlocking
-import uk.co.caprica.picam.CameraException
-import java.io.File
 
 @Suppress("WarningOnMainUnusedParameterMigration")
 fun main(args: Array<String>) {
