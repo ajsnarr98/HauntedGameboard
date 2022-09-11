@@ -34,7 +34,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 /*
  * Class:     com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera
  * Method:    takePicture
- * Signature: (JLjava/lang/Object;)I
+ * Signature: (JLcom/github/ajsnarr98/hauntedgameboard/hardware/camera/RealLibCamera/RawPicture;)I
  */
 JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_takePicture
   (JNIEnv *, jclass, jlong, jobject);
