@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) {
     println("Hello, world!")
 
-    val gpio: GPIOInterface = RealGPIO
+//    val gpio: GPIOInterface = RealGPIO
 
     val isInit = runBlocking { gpio.initialize() }
     if (!isInit) {
@@ -42,5 +42,5 @@ fun main(args: Array<String>) {
 //    println("...slept...")
 
     camera.close()
-    gpio.close()
+//    gpio.close()
 }
