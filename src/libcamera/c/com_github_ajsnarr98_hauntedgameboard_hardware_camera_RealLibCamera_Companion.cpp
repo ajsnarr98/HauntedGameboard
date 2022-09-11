@@ -1,7 +1,7 @@
 #ifndef _Included_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_c
 #define _Included_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_c
 
-#include "com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera.h"
+#include "com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_Companion.h"
 
 #include <sys/mman.h>
 
@@ -139,7 +139,7 @@ void loge(const std::string& input)
  * Method:    showDebugLog
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_showDebugLog
+JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_showDebugLog
   (JNIEnv *env, jclass clz, jboolean shouldShowDebugLog) {
 
     showDebugLog = shouldShowDebugLog;
@@ -150,7 +150,7 @@ JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
  * Method:    acquireCamera
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_acquireCamera
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_acquireCamera
   (JNIEnv *env, jclass clz, jlong thiz) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
@@ -172,7 +172,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
  * Method:    releaseCamera
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_releaseCamera
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_releaseCamera
   (JNIEnv *env, jclass clz, jlong thiz) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
@@ -190,7 +190,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
  * Method:    takePicture
  * Signature: (JLcom/github/ajsnarr98/hauntedgameboard/hardware/camera/RealLibCamera/RawPicture;)I
  */
-JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_takePicture
+JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_takePicture
   (JNIEnv *env, jclass clz, jlong thiz, jobject jPicture) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
@@ -247,7 +247,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
  * Method:    cxxConstruct
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_cxxConstruct
+JNIEXPORT jlong JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_cxxConstruct
   (JNIEnv *env, jclass clz) {
     return reinterpret_cast<jlong>(new LibcameraUsage());
 }
@@ -257,7 +257,7 @@ JNIEXPORT jlong JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_came
  * Method:    cxxDestroy
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_cxxDestroy
+JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_cxxDestroy
   (JNIEnv *env, jclass clz, jlong thiz) {
     delete reinterpret_cast<LibcameraUsage*>(thiz);
 }
