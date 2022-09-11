@@ -2,16 +2,17 @@
 #include <jni.h>
 /* Header for class com_github_ajsnarr98_hauntedgameboard_hardware_GPIO */
 
-#include <stdio.h>
-#include <string.h>
-
-#include <pigpio.h>
-
 #ifndef _Included_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO
 #define _Included_com_github_ajsnarr98_hauntedgameboard_hardware_GPIO
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <stdio.h>
+#include <string.h>
+
+#include <pigpio.h>
+
 /*
  * Class:     com_github_ajsnarr98_hauntedgameboard_hardware_GPIO
  * Method:    _setLogLevel
