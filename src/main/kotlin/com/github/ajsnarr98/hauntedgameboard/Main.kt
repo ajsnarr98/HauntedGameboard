@@ -13,6 +13,7 @@ import java.io.IOException
 @Suppress("WarningOnMainUnusedParameterMigration")
 fun main(args: Array<String>) {
     println("Hello, world!")
+    loadOpenCvSharedLib()
 
     val gpio: GPIOInterface = RealGPIO
 
