@@ -4,6 +4,7 @@ import com.github.ajsnarr98.hauntedgameboard.hardware.camera.Camera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
 import com.github.ajsnarr98.hauntedgameboard.hardware.camera.RealLibCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
+import com.github.ajsnarr98.hauntedgameboard.util.OSUtil
 import cz.adamh.utils.NativeUtils
 import kotlinx.coroutines.runBlocking
 import org.opencv.core.Core
@@ -49,10 +50,8 @@ fun main(args: Array<String>) {
 }
 
 fun loadOpenCvSharedLib() {
-    val isWindows: Boolean = System.getProperty("os.name").startsWith("Windows")
-    val ext: String = if (isWindows) "dll" else "so"
     try {
-        NativeUtils.loadLibraryFromJar("/nativelib/${Core.NATIVE_LIBRARY_NAME}.$ext")
+        NativeUtils.loadLibraryFromJar("/nativelib/${Core.NATIVE_LIBRARY_NAME}${OSUtil.targetSharedLibPostfix}.${OSUtil.targetSharedLibExt}")
     } catch (e: IOException) {
         throw RuntimeException(e.toString())
     }
