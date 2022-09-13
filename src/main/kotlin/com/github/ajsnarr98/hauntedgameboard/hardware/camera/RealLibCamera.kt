@@ -55,7 +55,7 @@ class RealLibCamera : Camera {
     companion object {
         init {
             try {
-                NativeUtils.loadLibraryFromJar("/lib/camera.so")
+                NativeUtils.loadLibraryFromJar("/nativelib/camera.so")
             } catch (e: IOException) {
                 throw RuntimeException(e.toString())
             }

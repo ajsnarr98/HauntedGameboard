@@ -13,7 +13,7 @@ object RealGPIO : AbstractGPIOInterface() {
 
     init {
         try {
-            NativeUtils.loadLibraryFromJar("/lib/gpio.so")
+            NativeUtils.loadLibraryFromJar("/nativelib/gpio.so")
         } catch (e: IOException) {
             throw RuntimeException(e.toString())
         }

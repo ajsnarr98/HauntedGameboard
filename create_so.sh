@@ -2,7 +2,7 @@
 
 # this script should be run from the project home directory
 
-mkdir -p src/lib/
+mkdir -p nativelib/
 
 # GPIO
 echo ''
@@ -16,7 +16,7 @@ make
 
 # move to location
 cd ../../..
-mv src/gpio/c/gpio.so src/lib/gpio.so
+mv src/gpio/c/gpio.so nativelib/gpio.so
 
 # LibCamera
 echo ''
@@ -30,4 +30,4 @@ make
 
 # move to location
 cd ../../..
-mv src/libcamera/c/camera.so src/lib/camera.so
+mv src/camera/c/camera.so nativelib/camera.so

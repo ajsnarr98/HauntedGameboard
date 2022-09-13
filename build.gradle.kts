@@ -20,7 +20,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
 
     implementation("uk.co.caprica:picam:2.0.2")
-    implementation("opencv:opencv:4.0.0-0")
+
+    // opencv
+//    implementation("opencv:opencv:4.0.0-0")
+    implementation(files("lib/opencv-460.jar"))
 }
 
 repositories {
@@ -32,8 +35,8 @@ sourceSets {
     main {
         java {
             srcDirs(
-                    "src/main/kotlin/",
-                    "src/main/java/"
+                "src/main/kotlin/",
+                "src/main/java/"
             )
         }
     }
@@ -52,7 +55,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
 tasks.jar {
     manifest {
         attributes(
-                "Main-Class" to glMainClassName
+            "Main-Class" to glMainClassName
         )
     }
 
@@ -66,8 +69,8 @@ tasks.jar {
         configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
     })
 
-    // add lib folder
-    from("src/lib/") {
-        into("lib/")
+    // add native lib folder
+    from("nativelib/") {
+        into("nativelib/")
     }
 }
