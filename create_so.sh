@@ -25,7 +25,7 @@ echo 'Compiling LibCamera Interface'
 echo '--------------------------------'
 
 # make shared lib
-cd src/libcamera/c
+cd src/camera/c
 make
 
 # move to location
