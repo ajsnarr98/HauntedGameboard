@@ -596,6 +596,8 @@ int LibcameraUsage::makeRequests()
 
 void LibcameraUsage::Teardown() {
 
+  log("Entering teardown...");
+
   // stop capture if camera is running
   CleanupAndStopCapture();
 
