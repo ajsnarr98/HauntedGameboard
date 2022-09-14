@@ -52,7 +52,7 @@ fun main(args: Array<String>) {
 
 fun loadOpenCvSharedLib() {
     try {
-        NativeUtils.loadLibraryFromJar("/nativelib/${Core.NATIVE_LIBRARY_NAME}${OSUtil.targetSharedLibPostfix}.${OSUtil.targetSharedLibExt}")
+        NativeUtils.loadLibraryFromJar("/nativelib/${Core.NATIVE_LIBRARY_NAME}-${OSUtil.targetSharedLibPostfix}.${OSUtil.targetSharedLibExt}")
     } catch (e: IOException) {
         throw RuntimeException(e.toString())
     }
