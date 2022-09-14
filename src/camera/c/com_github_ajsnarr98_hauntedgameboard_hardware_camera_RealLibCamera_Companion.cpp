@@ -108,6 +108,7 @@ private:
 	std::vector<std::unique_ptr<Request>> requests_;
 	std::set<Request *> completed_requests_;
 	bool camera_started_ = false;
+	bool camera_cleaned_up_ = false;
 	std::mutex camera_stop_mutex_;
 	std::mutex requests_mutex_;
 	unsigned int num_requests_completed_ = 0;
@@ -416,6 +417,7 @@ int LibcameraUsage::StartCapture() {
   if (ret != SUCCESS) {
     return ret;
   }
+  camera_cleaned_up_ = false;
 
   // Build a list of initial controls that we must set in the camera before starting it.
 	// We don't overwrite anything the application may have set before calling us.
@@ -486,8 +488,15 @@ int LibcameraUsage::CleanupAndStopCapture() {
       }
 
 			camera_started_ = false;
+			log("camera stopped");
 		}
 	}
+
+  if (camera_cleaned_up_) {
+    log("Skipped camera stop/cleanup!");
+    return SUCCESS;
+  }
+  camera_cleaned_up_ = true;
 
 	if (camera_) {
 		camera_->requestCompleted.disconnect(this, &LibcameraUsage::requestComplete);
@@ -587,10 +596,8 @@ int LibcameraUsage::makeRequests()
 
 void LibcameraUsage::Teardown() {
 
-  if (camera_started_) {
-    camera_->stop();
-    camera_started_ = false;
-  }
+  // stop capture if camera is running
+  CleanupAndStopCapture();
 
   for (auto &iter : mapped_buffers_)
 	{
