@@ -265,6 +265,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     int bgrPixelsSize = width * height * 3;
     jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
 
+    log("mem span vector size: " + std::to_string(vector.size);
 //    auto tmpmem = mem[0].data();
 
 //    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
