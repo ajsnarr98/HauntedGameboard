@@ -30,6 +30,9 @@ class RealLibCamera : Camera {
             // TODO
         }
         println("Picture with width, height (${rawPicture.width}, ${rawPicture.height})")
+        if (rawPicture.pixels.size != rawPicture.width * rawPicture.height * 3) {
+            println("Pixels array does not match expected size")
+        }
         val image = Mat(rawPicture.height, rawPicture.width, CvType.CV_8UC3)
         var i = 0
         for (h in 0 until rawPicture.height) {
