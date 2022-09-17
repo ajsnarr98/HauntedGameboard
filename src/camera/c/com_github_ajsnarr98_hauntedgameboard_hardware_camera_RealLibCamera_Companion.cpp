@@ -244,7 +244,8 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
     std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
-    for (std::set<libcamera::Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
+    std::set<libcamera::Request *>::iterator itr;
+    for (itr = completedRequests.begin(); itr != completedRequests.end(); itr++) {
       req = *itr;
       break;
     }
