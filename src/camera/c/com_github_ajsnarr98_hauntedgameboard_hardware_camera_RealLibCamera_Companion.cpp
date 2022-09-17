@@ -241,12 +241,12 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // load buffers
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
-    auto completedRequests = libCameraUsage.CompletedRequests()
-    for (std::set<Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
+    auto completedRequests = libCameraUsage->CompletedRequests()
+    for (std::set<libcamera::Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
       req = *itr;
       break;
     }
-    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage.Mmap(req->buffers()[stream]);
+    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(req->buffers()[stream]);
 
     // TODO check if buffer is single plane YUV
     // loge("only single plane YUV supported");
@@ -318,7 +318,7 @@ static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width,
   } else if (pixelFormat == libcamera::formats::YUV420) {
     return yuv420_to_bgr(out, width, height, input);
   } else {
-    return libCameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
+    return LibcameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
   }
 }
 
@@ -357,11 +357,11 @@ static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
     }
   }
 
-  return SUCCESS;
+  return LibcameraUsage::SUCCESS;
 }
 
 static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
-  return libCameraUsage::ERR_NOT_IMPLEMENTED;
+  return LibCameraUsage::ERR_NOT_IMPLEMENTED;
 }
 
 /* If we definitely appear to be running the old camera stack, return false.
