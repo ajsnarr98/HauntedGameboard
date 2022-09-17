@@ -243,14 +243,14 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // load buffers
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
-    std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
-    std::set<libcamera::Request *>::iterator itr;
-    for (itr = completedRequests.begin(); itr != completedRequests.end(); itr++) {
-      req = *itr;
-      break;
-    }
-    libcamera::Request::BufferMap buffers = req->buffers();
-    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
+//    std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
+//    std::set<libcamera::Request *>::iterator itr;
+//    for (itr = completedRequests.begin(); itr != completedRequests.end(); itr++) {
+//      req = *itr;
+//      break;
+//    }
+//    libcamera::Request::BufferMap buffers = req->buffers();
+//    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // TODO check if buffer is single plane YUV
     // loge("only single plane YUV supported");
@@ -262,18 +262,18 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     auto jHeightFieldId = env->GetFieldID(jRawPictureClz, "height", "I");
     auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]");
 
-    const int bgrPixelsSize = width * height * 3;
-    jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
-
-    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
-
-    jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
-    env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
-    delete nativeBGRPixels;
+//    const int bgrPixelsSize = width * height * 3;
+//    jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
+//
+//    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
+//
+//    jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
+//    env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
+//    delete nativeBGRPixels;
 
     env->SetIntField(jPicture, jWidthFieldId, width);
     env->SetIntField(jPicture, jHeightFieldId, height);
-    env->SetObjectField(jPicture, jPixelsFieldId, jBGRPixels);
+//    env->SetObjectField(jPicture, jPixelsFieldId, jBGRPixels);
 
     return err;
 }

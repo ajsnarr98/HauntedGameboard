@@ -42,6 +42,7 @@ fun main(args: Array<String>) {
         val picture = camera.takePicture()
         println("taken")
 
+        
         Imgcodecs.imwrite("tmp.jpeg", picture)
     }
 
