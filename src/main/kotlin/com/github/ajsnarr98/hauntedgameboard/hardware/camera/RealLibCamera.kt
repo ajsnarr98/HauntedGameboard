@@ -1,6 +1,7 @@
 package com.github.ajsnarr98.hauntedgameboard.hardware.camera
 
 import cz.adamh.utils.NativeUtils
+import org.opencv.core.CvType
 import org.opencv.core.Mat
 import java.io.IOException
 
@@ -29,8 +30,22 @@ class RealLibCamera : Camera {
             // TODO
         }
         println("Picture with width, height (${rawPicture.width}, ${rawPicture.height})")
-        // TODO
-        return Mat()
+        val image = Mat(rawPicture.height, rawPicture.width, CvType.CV_8UC3)
+        var i = 0
+        for (h in 0 until rawPicture.height) {
+            for (w in 0 until rawPicture.width) {
+                image.put(
+                    h, w,
+                    byteArrayOf(
+                        rawPicture.pixels[i],
+                        rawPicture.pixels[i + 1],
+                        rawPicture.pixels[i + 2]
+                    )
+                )
+                i += 3
+            }
+        }
+        return image
     }
 
     /**

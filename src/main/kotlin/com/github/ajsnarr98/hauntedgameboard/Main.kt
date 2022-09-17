@@ -8,6 +8,8 @@ import com.github.ajsnarr98.hauntedgameboard.util.OSUtil
 import cz.adamh.utils.NativeUtils
 import kotlinx.coroutines.runBlocking
 import org.opencv.core.Core
+import org.opencv.imgcodecs.Imgcodecs
+import java.io.File
 import java.io.IOException
 
 @Suppress("WarningOnMainUnusedParameterMigration")
@@ -37,8 +39,10 @@ fun main(args: Array<String>) {
         println("initializing camera..")
         camera.initialize()
         println("taking picture...")
-        camera.takePicture()
+        val picture = camera.takePicture()
         println("taken")
+
+        Imgcodecs.imwrite("tmp.jpeg", picture)
     }
 
 //    println("sleeping...")
