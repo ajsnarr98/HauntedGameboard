@@ -129,10 +129,10 @@ private:
 
 static bool check_camera_stack();
 
-static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width, int height, uint8_t *input);
+static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 
-static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input);
-static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input);
+static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
+static int yuyv_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 
 void log(const std::string& input)
 {
@@ -262,10 +262,10 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     auto jHeightFieldId = env->GetFieldID(jRawPictureClz, "height", "I");
     auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]");
 
-    int bgrPixelsSize = width * height * 3;
+    const int bgrPixelsSize = width * height * 3;
     jbyte nativeBGRPixels[bgrPixelsSize];
 
-    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, mem[0].data());
+    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
     jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
     env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
@@ -316,25 +316,25 @@ static uint8_t r(uint8_t y, uint8_t u, uint8_t v) {
   return std::clamp(r, 0, 255);
 }
 
-static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width, int height, uint8_t *input) {
+static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
   if (pixelFormat == libcamera::formats::YUYV) {
-    return yuyv_to_bgr(out, width, height, input);
+    return yuyv_to_bgr(out, width, height, stride, input);
   } else if (pixelFormat == libcamera::formats::YUV420) {
-    return yuv420_to_bgr(out, width, height, input);
+    return yuv420_to_bgr(out, width, height, stride, input);
   } else {
     return LibcameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
   }
 }
 
-static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
+static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
   uint8_t *yBlock = input + 0;
-  uint8_t *uBlock = input + (width * height);
-  uint8_t *vBlock = input + (width * height) + (width * height)/4;
+  uint8_t *uBlock = input + (stride * height);
+  uint8_t *vBlock = input + (stride * height) + (stride * height)/4;
 
   int i = 0;
   int outPos;
   int yStart;
-  int yOffsets[] = {0, 1, width, width+1};
+  int yOffsets[] = {0, 1, stride, stride+1};
   int yPos;
 
   uint8_t y;
@@ -364,7 +364,7 @@ static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
   return LibcameraUsage::SUCCESS;
 }
 
-static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
+static int yuyv_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
   return LibcameraUsage::ERR_NOT_IMPLEMENTED;
 }
 
