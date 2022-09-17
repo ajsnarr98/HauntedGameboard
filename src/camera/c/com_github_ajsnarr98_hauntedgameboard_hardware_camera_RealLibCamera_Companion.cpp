@@ -501,7 +501,7 @@ int LibcameraUsage::setupCapture() {
 			// "Single plane" buffers appear as multi-plane here, but we can spot them because then
 			// planes all share the same fd. We accumulate them so as to mmap the buffer only once.
 			size_t buffer_size = 0;
-			log("Buffer planes: " + std::to_string(buffer->planes().size()))
+			log("Buffer planes: " + std::to_string(buffer->planes().size()));
 			for (unsigned i = 0; i < buffer->planes().size(); i++)
 			{
 				const FrameBuffer::Plane &plane = buffer->planes()[i];
