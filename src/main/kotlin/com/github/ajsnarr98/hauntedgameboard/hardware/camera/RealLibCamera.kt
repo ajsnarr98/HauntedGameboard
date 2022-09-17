@@ -35,18 +35,22 @@ class RealLibCamera : Camera {
         }
         val image = Mat(rawPicture.height, rawPicture.width, CvType.CV_8UC3)
         var i = 0
-        for (h in 0 until rawPicture.height) {
-            for (w in 0 until rawPicture.width) {
-                image.put(
-                    h, w,
-                    byteArrayOf(
-                        rawPicture.pixels[i],
-                        rawPicture.pixels[i + 1],
-                        rawPicture.pixels[i + 2]
+        try {
+            for (h in 0 until rawPicture.height) {
+                for (w in 0 until rawPicture.width) {
+                    image.put(
+                        h, w,
+                        byteArrayOf(
+                            rawPicture.pixels[i],
+                            rawPicture.pixels[i + 1],
+                            rawPicture.pixels[i + 2]
+                        )
                     )
-                )
-                i += 3
+                    i += 3
+                }
             }
+        } catch (e: IndexOutOfBoundsException) {
+            println("threw indexoutofbounds")
         }
         return image
     }
