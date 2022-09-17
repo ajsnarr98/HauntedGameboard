@@ -96,7 +96,7 @@ public:
 	int Wait();
 
 	Stream *StillStream() const;
-	std::set<Request *> CompletedRequests();
+	std::set<Request *> CompletedRequests() const;
 
 	std::vector<libcamera::Span<uint8_t>> Mmap(FrameBuffer *buffer) const;
 
@@ -241,7 +241,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // load buffers
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
-    auto completedRequests = libCameraUsage->CompletedRequests()
+    std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests()
     for (std::set<libcamera::Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
       req = *itr;
       break;
@@ -623,7 +623,7 @@ libcamera::Stream *LibcameraUsage::StillStream() const {
   return still_stream_;
 }
 
-std::set<Request *> LibcameraUsage::CompletedRequests() {
+std::set<libcamera::Request *> LibcameraUsage::CompletedRequests() const {
   return completed_requests_;
 }
 
