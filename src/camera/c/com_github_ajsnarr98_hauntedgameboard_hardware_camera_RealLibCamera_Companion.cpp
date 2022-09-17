@@ -174,7 +174,9 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     err = libCameraUsage->AcquireCamera();
     err = libCameraUsage->Configure();
-    // TODO handle errors
+    if (err != libCameraUsage->SUCCESS) {
+      // TODO handle errors
+    }
 
     return libCameraUsage->SUCCESS;
 }
@@ -241,12 +243,13 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // load buffers
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
-    std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests()
+    std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
     for (std::set<libcamera::Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
       req = *itr;
       break;
     }
-    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(req->buffers()[stream]);
+    libcamera::Request::BufferMap buffers = req->buffers;
+    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // TODO check if buffer is single plane YUV
     // loge("only single plane YUV supported");
