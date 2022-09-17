@@ -361,7 +361,7 @@ static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
 }
 
 static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
-  return LibCameraUsage::ERR_NOT_IMPLEMENTED;
+  return LibcameraUsage::ERR_NOT_IMPLEMENTED;
 }
 
 /* If we definitely appear to be running the old camera stack, return false.
@@ -619,11 +619,11 @@ int LibcameraUsage::CleanupAndStopCapture() {
   return SUCCESS;
 }
 
-libCameraUsage::Stream *LibcameraUsage::StillStream() const {
+libcamera::Stream *LibcameraUsage::StillStream() const {
   return still_stream_;
 }
 
-std::set<Request *> CompletedRequests() {
+std::set<Request *> LibcameraUsage::CompletedRequests() {
   return completed_requests_;
 }
 
