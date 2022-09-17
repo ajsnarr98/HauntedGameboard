@@ -5,6 +5,7 @@
 
 #include <sys/mman.h>
 
+#include <algorithm>
 #include <condition_variable>
 #include <cstring>
 #include <fstream>
@@ -78,6 +79,8 @@ public:
 	static constexpr int ERR_CAPTURE_STOPPED = 14;
 	static constexpr int ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN = 14;
 	static constexpr int ERR_NON_SINGLE_PLANE_YUV_FOUND = 14;
+	static constexpr int ERR_NOT_IMPLEMENTED = 15;
+	static constexpr int ERR_UNHANDLED_PIXEL_FORMAT = 16;
 
 	LibcameraUsage();
 
@@ -93,6 +96,9 @@ public:
 	int Wait();
 
 	Stream *StillStream() const;
+	std::set<Request *> CompletedRequests();
+
+	std::vector<libcamera::Span<uint8_t>> Mmap(FrameBuffer *buffer) const;
 
 //protected:
 //	std::unique_ptr<Options> options_;
@@ -122,6 +128,11 @@ private:
 };
 
 static bool check_camera_stack();
+
+static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width, int height, uint8_t *input);
+
+static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input);
+static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input);
 
 void log(const std::string& input)
 {
@@ -226,21 +237,40 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
        loge("Both width and height of image must be even");
        return libCameraUsage->ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN;
     }
+
+    // load buffers
+    // TODO do we only care about the first completed request?
+    Request *req;
+    auto completedRequests = libCameraUsage.CompletedRequests()
+    for (std::set<Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
+      req = *itr;
+      break;
+    }
+    const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage.Mmap(req->buffers()[stream]);
+
     // TODO check if buffer is single plane YUV
     // loge("only single plane YUV supported");
     // return libCameraUsage->ERR_NON_SINGLE_PLANE_YUV_FOUND;
 
-    // load picture
+    // convert pixels and put data in return object
     auto jRawPictureClz = env->GetObjectClass(jPicture);
     auto jWidthFieldId = env->GetFieldID(jRawPictureClz, "width", "I");
     auto jHeightFieldId = env->GetFieldID(jRawPictureClz, "height", "I");
+    auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]")
+
+    int bgrPixelsSize = width * height * 3
+    jbyte nativeBGRPixels[bgrPixelsSize];
+
+    err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, mem[0].data());
+
+    jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
+    env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
 
     env->SetIntField(jPicture, jWidthFieldId, width);
     env->SetIntField(jPicture, jHeightFieldId, height);
+    env->SetObjectField(jPicture, jPixelsFieldId, jBGRPixels);
 
-    // TODO load and convert pixels
-
-    return libCameraUsage->SUCCESS;
+    return err;
 }
 
 /*
@@ -261,6 +291,77 @@ JNIEXPORT jlong JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_came
 JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_cxxDestroy
   (JNIEnv *env, jclass clz, jlong thiz) {
     delete reinterpret_cast<LibcameraUsage*>(thiz);
+}
+
+static uint8_t b(uint8_t y, uint8_t u, uint8_t v) {
+  int b = y + (1.732446 * (u-128));
+  // or fast integer computing with a small approximation
+  // b = y + (443*(u-128))>>8;
+  return clamp(b, 0, 255);
+}
+static uint8_t g(uint8_t y, uint8_t u, uint8_t v) {
+  int g = y - (0.698001 * (v-128)) - (0.337633 * (u-128));
+  // or fast integer computing with a small approximation
+  // g = y - (179*(v-128) + 86*(u-128))>>8;
+  return clamp(g, 0, 255);
+}
+static uint8_t r(uint8_t y, uint8_t u, uint8_t v) {
+  int r = y + (1.370705 * (v-128));
+  // or fast integer computing with a small approximation
+  // r = y + (351*(v-128))>>8;
+  return clamp(r, 0, 255);
+}
+
+static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width, int height, uint8_t *input) {
+  if (pixelFormat == libcamera::formats::YUYV) {
+    return yuyv_to_bgr(out, width, height, input);
+  } else if (pixelFormat == libcamera::formats::YUV420) {
+    return yuv420_to_bgr(out, width, height, input);
+  } else {
+    return libCameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
+  }
+}
+
+static int yuv420_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
+  uint8_t *yBlock = input + 0;
+  uint8_t *uBlock = input + (width * height);
+  uint8_t *vBlock = input + (width * height) + (width * height)/4;
+
+  int i = 0;
+  int outPos;
+  int yStart;
+  int yOffsets[] = {0, 1, width, width+1};
+  int yPos;
+
+  uint8_t y;
+  uint8_t u;
+  uint8_t v;
+
+  // treat y block like a 2-dimensional array of size width x height
+  for (int h=0; h<height; h+=2) {
+    for (int w=0; w<width; w+=2) {
+      u = uBlock[i];
+      v = vBlock[i];
+      yStart = (h * width) + w;
+      // iterate through positions in next 2x2 in yBlock
+      for (int j=0; j<4; j++) {
+        yPos = yStart + yOffsets[j];
+        outPos = yPos * 3;
+        y = yBlock[yPos];
+
+        out[outPos + 0] = b(y, u, v);
+        out[outPos + 1] = g(y, u, v);
+        out[outPos + 2] = r(y, u, v);
+      }
+      i++;
+    }
+  }
+
+  return SUCCESS;
+}
+
+static int yuyv_to_bgr(jbyte *out, int width, int height, uint8_t *input) {
+  return libCameraUsage::ERR_NOT_IMPLEMENTED;
 }
 
 /* If we definitely appear to be running the old camera stack, return false.
@@ -520,6 +621,18 @@ int LibcameraUsage::CleanupAndStopCapture() {
 
 libcamera::Stream *LibcameraUsage::StillStream() const {
   return still_stream_;
+}
+
+std::set<Request *> CompletedRequests() {
+  return completed_requests_;
+}
+
+std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) const
+{
+	auto item = mapped_buffers_.find(buffer);
+	if (item == mapped_buffers_.end())
+		return {};
+	return item->second;
 }
 
 int LibcameraUsage::Wait() {
