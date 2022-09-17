@@ -639,10 +639,10 @@ std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) 
 {
 	auto item = mapped_buffers_.find(buffer);
 	if (item == mapped_buffers_.end()) {
-	  log("frame buffer was at end")
+	  log("frame buffer was at end");
 		return {};
   }
-  log("frame buffer was not at end")
+  log("frame buffer was not at end");
 	return item->second;
 }
 
