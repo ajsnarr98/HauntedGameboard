@@ -62,7 +62,8 @@ class RealLibCamera : Camera {
     }
 
     class RawPicture {
-        var pixels: ByteArray = ByteArray(0) // expected BGR format
+        //        var pixels: ByteArray = ByteArray(0) // expected BGR format
+        var pixels: Byte = 0 // expected BGR format
         var width: Int = 0
         var height: Int = 0
     }
