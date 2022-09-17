@@ -240,7 +240,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     // load buffers
     // TODO do we only care about the first completed request?
-    Request *req;
+    libcamera::Request *req;
     auto completedRequests = libCameraUsage.CompletedRequests()
     for (std::set<Request *>::iterator itr = completedRequests.begin(); itr != completedRequests.end(), itr++) {
       req = *itr;
@@ -256,9 +256,9 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     auto jRawPictureClz = env->GetObjectClass(jPicture);
     auto jWidthFieldId = env->GetFieldID(jRawPictureClz, "width", "I");
     auto jHeightFieldId = env->GetFieldID(jRawPictureClz, "height", "I");
-    auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]")
+    auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]");
 
-    int bgrPixelsSize = width * height * 3
+    int bgrPixelsSize = width * height * 3;
     jbyte nativeBGRPixels[bgrPixelsSize];
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, mem[0].data());
@@ -297,19 +297,19 @@ static uint8_t b(uint8_t y, uint8_t u, uint8_t v) {
   int b = y + (1.732446 * (u-128));
   // or fast integer computing with a small approximation
   // b = y + (443*(u-128))>>8;
-  return clamp(b, 0, 255);
+  return std::clamp(b, 0, 255);
 }
 static uint8_t g(uint8_t y, uint8_t u, uint8_t v) {
   int g = y - (0.698001 * (v-128)) - (0.337633 * (u-128));
   // or fast integer computing with a small approximation
   // g = y - (179*(v-128) + 86*(u-128))>>8;
-  return clamp(g, 0, 255);
+  return std::clamp(g, 0, 255);
 }
 static uint8_t r(uint8_t y, uint8_t u, uint8_t v) {
   int r = y + (1.370705 * (v-128));
   // or fast integer computing with a small approximation
   // r = y + (351*(v-128))>>8;
-  return clamp(r, 0, 255);
+  return std::clamp(r, 0, 255);
 }
 
 static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, int width, int height, uint8_t *input) {
@@ -619,7 +619,7 @@ int LibcameraUsage::CleanupAndStopCapture() {
   return SUCCESS;
 }
 
-libcamera::Stream *LibcameraUsage::StillStream() const {
+libCameraUsage::Stream *LibcameraUsage::StillStream() const {
   return still_stream_;
 }
 
