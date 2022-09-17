@@ -508,7 +508,7 @@ int LibcameraUsage::setupCapture() {
 				buffer_size += plane.length;
 				if (i == buffer->planes().size() - 1 || plane.fd.get() != buffer->planes()[i + 1].fd.get())
 				{
-				  log("mmaped a plane")
+				  log("mmaped a plane");
 					void *memory = mmap(NULL, buffer_size, PROT_READ | PROT_WRITE, MAP_SHARED, plane.fd.get(), 0);
 					mapped_buffers_[buffer.get()].push_back(
 						libcamera::Span<uint8_t>(static_cast<uint8_t *>(memory), buffer_size));
