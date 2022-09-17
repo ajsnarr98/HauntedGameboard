@@ -249,7 +249,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
       req = *itr;
       break;
     }
-    libcamera::Request::BufferMap buffers = req->buffers;
+    libcamera::Request::BufferMap buffers = req->buffers();
     const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // TODO check if buffer is single plane YUV
@@ -263,12 +263,13 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     auto jPixelsFieldId = env->GetFieldID(jRawPictureClz, "pixels", "[B]");
 
     const int bgrPixelsSize = width * height * 3;
-    jbyte nativeBGRPixels[bgrPixelsSize];
+    jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
     jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
     env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
+    delete nativeBGRPixels;
 
     env->SetIntField(jPicture, jWidthFieldId, width);
     env->SetIntField(jPicture, jHeightFieldId, height);
@@ -331,10 +332,10 @@ static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, un
   uint8_t *uBlock = input + (stride * height);
   uint8_t *vBlock = input + (stride * height) + (stride * height)/4;
 
-  int i = 0;
-  int outPos;
-  int yStart;
-  int yOffsets[] = {0, 1, stride, stride+1};
+  unsigned int i = 0;
+  unsigned int outPos;
+  unsigned int yStart;
+  unsigned int yOffsets[] = {0, 1, stride, stride+1};
   int yPos;
 
   uint8_t y;
@@ -342,13 +343,13 @@ static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, un
   uint8_t v;
 
   // treat y block like a 2-dimensional array of size width x height
-  for (int h=0; h<height; h+=2) {
-    for (int w=0; w<width; w+=2) {
+  for (unsigned int h=0; h<height; h+=2) {
+    for (unsigned int w=0; w<width; w+=2) {
       u = uBlock[i];
       v = vBlock[i];
       yStart = (h * width) + w;
       // iterate through positions in next 2x2 in yBlock
-      for (int j=0; j<4; j++) {
+      for (unsigned int j=0; j<4; j++) {
         yPos = yStart + yOffsets[j];
         outPos = yPos * 3;
         y = yBlock[yPos];
