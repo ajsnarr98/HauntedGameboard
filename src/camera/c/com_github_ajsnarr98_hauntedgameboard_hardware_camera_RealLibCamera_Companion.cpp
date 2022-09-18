@@ -179,7 +179,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     if (!check_camera_stack()) {
         loge("The system seems to be configured for the legacy camera stack.");
-        return libCameraUsage::ERR_USING_LEGACY_CAMERA_STACK;
+        return libCameraUsage->ERR_USING_LEGACY_CAMERA_STACK;
     }
     int err;
 
