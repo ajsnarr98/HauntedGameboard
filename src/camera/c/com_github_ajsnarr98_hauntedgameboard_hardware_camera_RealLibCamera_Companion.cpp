@@ -686,6 +686,7 @@ void LibcameraUsage::requestComplete(Request *request) {
   if (request->status() == Request::RequestCancelled)
 		return;
 
+  logd("tmp hello");
   logd("Inserting request into completed requests");
   completed_requests_.insert(request);
 
