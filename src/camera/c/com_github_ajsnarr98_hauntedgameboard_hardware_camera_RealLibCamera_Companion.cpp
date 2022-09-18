@@ -279,7 +279,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     env->SetIntField(jPicture, jWidthFieldId, width);
     env->SetIntField(jPicture, jHeightFieldId, height);
-//    env->SetObjectField(jPicture, jPixelsFieldId, jBGRPixels);
+    env->SetObjectField(jPicture, jPixelsFieldId, jBGRPixels);
 
     return err;
 }
