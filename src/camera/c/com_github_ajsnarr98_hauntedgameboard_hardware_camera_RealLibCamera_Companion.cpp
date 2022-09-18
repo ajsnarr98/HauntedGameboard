@@ -82,6 +82,7 @@ public:
 	static constexpr int ERR_NON_SINGLE_PLANE_YUV_FOUND = 14;
 	static constexpr int ERR_NOT_IMPLEMENTED = 15;
 	static constexpr int ERR_UNHANDLED_PIXEL_FORMAT = 16;
+	static constexpr int ERR_USING_LEGACY_CAMERA_STACK = 17;
 
 	LibcameraUsage();
 
@@ -177,14 +178,18 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
 
     if (!check_camera_stack()) {
-        // return TODO
+        loge("The system seems to be configured for the legacy camera stack.");
+        return libCameraUsage::ERR_USING_LEGACY_CAMERA_STACK;
     }
     int err;
 
     err = libCameraUsage->AcquireCamera();
+    if (err != libCameraUsage->SUCCESS) {
+      return err;
+    }
     err = libCameraUsage->Configure();
     if (err != libCameraUsage->SUCCESS) {
-      // TODO handle errors
+      return err;
     }
 
     return libCameraUsage->SUCCESS;
@@ -199,7 +204,6 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   (JNIEnv *env, jclass clz, jlong thiz) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
-    // TODO
 
     libCameraUsage->CleanupAndStopCapture();
     libCameraUsage->ReleaseCamera();
@@ -221,14 +225,12 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     int err;
     err = libCameraUsage->StartCapture();
     if (err != libCameraUsage->SUCCESS) {
-      // TODO handle error
       return err;
     }
 
     // wait on capture to finish
     err = libCameraUsage->Wait();
     if (err != libCameraUsage->SUCCESS) {
-      // TODO handle error
       return err;
     }
 
