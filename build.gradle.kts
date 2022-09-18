@@ -20,7 +20,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
 
     implementation("uk.co.caprica:picam:2.0.2")
-    implementation("opencv:opencv:4.0.0-0")
+
+    // opencv
+//    implementation("opencv:opencv:4.0.0-0")
+    implementation(files("lib/opencv-460.jar"))
 }
 
 repositories {
@@ -43,10 +46,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions {
         jvmTarget = "11"
@@ -60,6 +59,8 @@ tasks.jar {
         )
     }
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     // add all the dependencies
     from(sourceSets.main.get().output)
 
@@ -68,8 +69,8 @@ tasks.jar {
         configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
     })
 
-    // add lib folder
-    from("src/lib/") {
-        into("lib/")
+    // add native lib folder
+    from("nativelib/") {
+        into("nativelib/")
     }
 }

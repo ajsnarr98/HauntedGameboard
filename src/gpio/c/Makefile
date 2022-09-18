@@ -3,11 +3,11 @@
 
 CC = gcc  # C compiler
 CFLAGS = -Wall -O3  # C flags
-LDFLAGS = -shared -Wl, --no-as-needed -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux  # linking flags
+LDFLAGS = -shared -Wl,--no-as-needed -lpigpio -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux  # linking flags
 RM = rm   # rm command
 TARGET_LIB = gpio.so  # target lib
 
-SRCS = com_ajsnarr_hauntedgameboard_hardware_GPIO.c # source files
+SRCS = com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO.c # source files
 
 .PHONY: all
 all: ${TARGET_LIB}

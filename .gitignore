@@ -46,6 +46,7 @@ hs_err_pid*
 
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/kotlinc.xml
 
 .idea/**/kotlinc.xml
 .idea/**/HauntedGameboard.iml
@@ -63,3 +64,10 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Share libraries
+gpio.so
+camera.so
+
+# Don't ignore these
+!opencv-*.jar
