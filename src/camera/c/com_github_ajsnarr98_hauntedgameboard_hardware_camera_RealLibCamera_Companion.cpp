@@ -463,7 +463,7 @@ int LibcameraUsage::Configure() {
 
   // todo: check on capturing raw stream as well for full resolution like libcamera-apps?
 
-	StreamRoles stream_roles = { StreamRole::StillCapture };
+	StreamRoles stream_roles = { StreamRole::StillCapture, StreamRole::Raw };
   configuration_ = camera_->generateConfiguration(stream_roles);
 	if (!configuration_) {
 		loge("failed to generate configuration");
