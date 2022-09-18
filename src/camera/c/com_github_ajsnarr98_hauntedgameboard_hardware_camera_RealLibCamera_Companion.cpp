@@ -233,10 +233,9 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     libcamera::PixelFormat pixelFormat = config.pixelFormat;
     std::optional<libcamera::ColorSpace> colorSpace = config.colorSpace;
 
-    libCameraUsage->CleanupAndStopCapture();
-
     if ((width & 1) || (height & 1)) {
        loge("Both width and height of image must be even");
+       libCameraUsage->CleanupAndStopCapture();
        return libCameraUsage->ERR_WIDTH_OR_HEIGHT_IS_NOT_EVEN;
     }
 
@@ -253,6 +252,9 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     libcamera::Request::BufferMap buffers = req->buffers();
     log("buffermap size: " + std::to_string(buffers.size()));
     const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
+
+    // stop capture and reset capture data
+    libCameraUsage->CleanupAndStopCapture();
 
     // TODO check if buffer is single plane YUV
     // loge("only single plane YUV supported");
