@@ -282,6 +282,8 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
+    logd("Finished converting to bgr format");
+
     jbyteArray jBGRPixels = env->NewByteArray(bgrPixelsSize);
     env->SetByteArrayRegion(jBGRPixels, 0, bgrPixelsSize, nativeBGRPixels);
     delete nativeBGRPixels;
@@ -334,8 +336,10 @@ static uint8_t r(uint8_t y, uint8_t u, uint8_t v) {
 
 static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
   if (pixelFormat == libcamera::formats::YUYV) {
+    logv("Converting from format YUYV...");
     return yuyv_to_bgr(out, width, height, stride, input);
   } else if (pixelFormat == libcamera::formats::YUV420) {
+    logv("Converting from format YUV420...");
     return yuv420_to_bgr(out, width, height, stride, input);
   } else {
     return LibcameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
