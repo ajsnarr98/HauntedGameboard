@@ -37,7 +37,7 @@
 bool showDebugLog = true;
 bool isVerboseLog = true;
 
-const std::string& LOG_PREFIX = "Libcamera: ";
+const std::string& LOG_PREFIX = "NativeCameraUsage: ";
 
 namespace controls = libcamera::controls;
 namespace properties = libcamera::properties;
@@ -133,7 +133,7 @@ static bool check_camera_stack();
 static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 
 static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
-static int yuyv_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
+static int nv12_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 
 void logd(const std::string& input)
 {
@@ -217,7 +217,6 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
   (JNIEnv *env, jclass clz, jlong thiz, jobject jPicture) {
   
     LibcameraUsage* libCameraUsage = reinterpret_cast<LibcameraUsage*>(thiz);
-    // TODO
 
     int err;
     err = libCameraUsage->StartCapture();
@@ -265,7 +264,11 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // stop capture and reset capture data
     libCameraUsage->CleanupAndStopCapture();
 
-    // TODO check if buffer is single plane YUV
+    // check if buffer is only single plane YUV
+    if (mem.size() != 1) {
+      loge("Only single plane YUV supported");
+      return libCameraUsage->ERR_NON_SINGLE_PLANE_YUV_FOUND;
+    }
     // loge("only single plane YUV supported");
     // return libCameraUsage->ERR_NON_SINGLE_PLANE_YUV_FOUND;
 
@@ -277,8 +280,6 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
 
     int bgrPixelsSize = width * height * 3;
     jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
-
-    logv("Mem span vector size: " + std::to_string(mem.size()));
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
@@ -335,9 +336,9 @@ static uint8_t r(uint8_t y, uint8_t u, uint8_t v) {
 }
 
 static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
-  if (pixelFormat == libcamera::formats::YUYV) {
-    logv("Converting from format YUYV...");
-    return yuyv_to_bgr(out, width, height, stride, input);
+  if (pixelFormat == libcamera::formats::NV12) {
+    logv("Converting from format NV12...");
+    return nv12_to_bgr(out, width, height, stride, input);
   } else if (pixelFormat == libcamera::formats::YUV420) {
     logv("Converting from format YUV420...");
     return yuv420_to_bgr(out, width, height, stride, input);
@@ -385,8 +386,41 @@ static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, un
   return LibcameraUsage::SUCCESS;
 }
 
-static int yuyv_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
-  return LibcameraUsage::ERR_NOT_IMPLEMENTED;
+static int nv12_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input) {
+  uint8_t *yBlock = input + 0;
+  uint8_t *uvBlock = input + (stride * height);
+
+  unsigned int i = 0;
+  unsigned int outPos;
+  unsigned int yStart;
+  unsigned int yOffsets[] = {0, 1, stride, stride+1};
+  int yPos;
+
+  uint8_t y;
+  uint8_t u;
+  uint8_t v;
+
+  // treat y block like a 2-dimensional array of size width x height
+  for (unsigned int h=0; h<height; h+=2) {
+    for (unsigned int w=0; w<width; w+=2) {
+      u = uvBlock[i];
+      v = uvBlock[i+1];
+      yStart = (h * width) + w;
+      // iterate through positions in next 2x2 in yBlock
+      for (unsigned int j=0; j<4; j++) {
+        yPos = yStart + yOffsets[j];
+        outPos = yPos * 3;
+        y = yBlock[yPos];
+
+        out[outPos + 0] = b(y, u, v);
+        out[outPos + 1] = g(y, u, v);
+        out[outPos + 2] = r(y, u, v);
+      }
+      i += 2;
+    }
+  }
+
+  return LibcameraUsage::SUCCESS;
 }
 
 /* If we definitely appear to be running the old camera stack, return false.
@@ -461,9 +495,8 @@ int LibcameraUsage::ReleaseCamera() {
 
 int LibcameraUsage::Configure() {
 
-  // todo: check on capturing raw stream as well for full resolution like libcamera-apps?
-
-	StreamRoles stream_roles = { StreamRole::StillCapture, StreamRole::Raw };
+  // todo: check on capturing raw stream as well to force full resolution like libcamera-apps?
+	StreamRoles stream_roles = { StreamRole::StillCapture };
   configuration_ = camera_->generateConfiguration(stream_roles);
 	if (!configuration_) {
 		loge("failed to generate configuration");
@@ -657,7 +690,6 @@ std::set<libcamera::Request *> LibcameraUsage::CompletedRequests() const {
 
 std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) const
 {
-
 	auto item = mapped_buffers_.find(buffer);
 	if (item == mapped_buffers_.end()) {
 	  loge("Frame buffer not in map");
