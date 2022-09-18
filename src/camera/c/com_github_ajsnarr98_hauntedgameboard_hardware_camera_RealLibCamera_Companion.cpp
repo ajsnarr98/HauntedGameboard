@@ -640,11 +640,12 @@ std::set<libcamera::Request *> LibcameraUsage::CompletedRequests() const {
 std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) const
 {
 	auto item = mapped_buffers_.find(buffer);
+	log("mapped_buffers size: " + std::to_string(mapped_buffers_.size()));
 	if (item == mapped_buffers_.end()) {
-	  log("frame buffer was at end");
+	  log("frame buffer not in map");
 		return {};
   }
-  log("frame buffer was not at end");
+  log("frame buffer was in map");
 	return item->second;
 }
 
