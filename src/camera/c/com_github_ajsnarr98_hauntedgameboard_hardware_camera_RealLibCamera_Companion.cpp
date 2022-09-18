@@ -151,7 +151,7 @@ void logv(const std::string& input)
 
 void loge(const std::string& input)
 {
-    fprintf(stderr, (LOG_PREFIX + input).c_str());
+    fprintf(stderr, (LOG_PREFIX + input + "\n").c_str());
 }
 
 /*
@@ -240,7 +240,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     unsigned int height = config.size.height;
     unsigned int stride = config.stride;
     libcamera::PixelFormat pixelFormat = config.pixelFormat;
-    std::optional<libcamera::ColorSpace> colorSpace = config.colorSpace;
+//    std::optional<libcamera::ColorSpace> colorSpace = config.colorSpace;
 
     if ((width & 1) || (height & 1)) {
        loge("Both width and height of image must be even");
