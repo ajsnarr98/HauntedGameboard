@@ -251,6 +251,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
       break;
     }
     libcamera::Request::BufferMap buffers = req->buffers();
+    log("buffermap size: " + std::to_string(buffers.size()));
     const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // TODO check if buffer is single plane YUV
@@ -614,6 +615,7 @@ int LibcameraUsage::CleanupAndStopCapture() {
 		camera_->requestCompleted.disconnect(this, &LibcameraUsage::requestComplete);
   }
 
+  log("clearing completed_requests");
 	completed_requests_.clear();
 
   {
@@ -640,6 +642,7 @@ std::set<libcamera::Request *> LibcameraUsage::CompletedRequests() const {
 
 std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) const
 {
+
 	auto item = mapped_buffers_.find(buffer);
 	log("mapped_buffers size: " + std::to_string(mapped_buffers_.size()));
 	if (item == mapped_buffers_.end()) {
@@ -675,6 +678,7 @@ void LibcameraUsage::requestComplete(Request *request) {
   if (request->status() == Request::RequestCancelled)
 		return;
 
+  log("inserting request into completed requests");
   completed_requests_.insert(request);
 
   requests_cond_.notify_one();
