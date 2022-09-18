@@ -342,6 +342,7 @@ static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned i
     logv("Converting from format YUV420...");
     return yuv420_to_bgr(out, width, height, stride, input);
   } else {
+    loge("Unhandled Pixel format: " + std::to_string(pixelFormat))
     return LibcameraUsage::ERR_UNHANDLED_PIXEL_FORMAT;
   }
 }
