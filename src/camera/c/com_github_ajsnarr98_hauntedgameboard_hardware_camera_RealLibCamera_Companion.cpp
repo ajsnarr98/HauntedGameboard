@@ -35,6 +35,7 @@
 #include <linux/videodev2.h>
 
 bool showDebugLog = true;
+bool isVerboseLog = true;
 
 const std::string& LOG_PREFIX = "Libcamera: ";
 
@@ -134,9 +135,16 @@ static int yuv_to_bgr(jbyte *out, libcamera::PixelFormat pixelFormat, unsigned i
 static int yuv420_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 static int yuyv_to_bgr(jbyte *out, unsigned int width, unsigned int height, unsigned int stride, uint8_t *input);
 
-void log(const std::string& input)
+void logd(const std::string& input)
 {
   if (showDebugLog) {
+    std::cout << (LOG_PREFIX + input) << std::endl;
+  }
+}
+
+void logv(const std::string& input)
+{
+  if (showDebugLog && isVerboseLog) {
     std::cout << (LOG_PREFIX + input) << std::endl;
   }
 }
@@ -152,9 +160,10 @@ void loge(const std::string& input)
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_showDebugLog
-  (JNIEnv *env, jclass clz, jboolean shouldShowDebugLog) {
+  (JNIEnv *env, jclass clz, jboolean shouldShowDebugLog, jboolean isVerbose) {
 
     showDebugLog = shouldShowDebugLog;
+    isVerboseLog = isVerbose;
 }
 
 /*
@@ -243,14 +252,14 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
     std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
-    log("number of completed requests: " + std::to_string(completedRequests.size()));
+    logv("number of completed requests: " + std::to_string(completedRequests.size()));
     std::set<libcamera::Request *>::iterator itr;
     for (itr = completedRequests.begin(); itr != completedRequests.end(); itr++) {
       req = *itr;
       break;
     }
     libcamera::Request::BufferMap buffers = req->buffers();
-    log("buffermap size: " + std::to_string(buffers.size()));
+    logv("buffermap size: " + std::to_string(buffers.size()));
     const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // stop capture and reset capture data
@@ -269,7 +278,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     int bgrPixelsSize = width * height * 3;
     jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
 
-    log("mem span vector size: " + std::to_string(mem.size()));
+    logv("mem span vector size: " + std::to_string(mem.size()));
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
@@ -430,7 +439,7 @@ int LibcameraUsage::AcquireCamera() {
     return ERR_FAILED_TO_ACQUIRE_CAMERA;
   }
 	camera_acquired_ = true;
-  log("Acquired camera " + cam_id);
+  logd("Acquired camera " + cam_id);
   return SUCCESS;
 }
 
@@ -459,7 +468,7 @@ int LibcameraUsage::Configure() {
   int ret = setupCapture();
   if (ret == SUCCESS) {
     still_stream_ = configuration_->at(0).stream();
-    log("Still capture setup complete");
+    logd("Still capture setup complete");
   }
   return ret;
 }
@@ -474,18 +483,18 @@ int LibcameraUsage::setupCapture() {
 		loge("failed to validate stream configurations");
     return ERR_FAILED_TO_VALIDATE_STREAM_CONFIGURATIONS;
   } else if (validation == CameraConfiguration::Adjusted) {
-		log("Stream configuration adjusted");
+		logd("Stream configuration adjusted");
   }
 
   if (camera_->configure(configuration_.get()) < 0) {
 		loge("failed to configure streams");
     return ERR_FAILED_TO_CONFIGURE_STREAMS;
   }
-	log("Camera streams configured");
+	logd("Camera streams configured");
 
-  log("Available controls:");
+  logv("Available controls:");
 	for (auto const &[id, info] : camera_->controls()) {
-		log("    " + id->name() + " : " + info.toString());
+		logv("    " + id->name() + " : " + info.toString());
   }
 
   // Next allocate all the buffers we need, mmap them and store them on a free list.
@@ -504,14 +513,14 @@ int LibcameraUsage::setupCapture() {
 			// "Single plane" buffers appear as multi-plane here, but we can spot them because then
 			// planes all share the same fd. We accumulate them so as to mmap the buffer only once.
 			size_t buffer_size = 0;
-			log("Num buffer planes: " + std::to_string(buffer->planes().size()));
+			logv("Num buffer planes: " + std::to_string(buffer->planes().size()));
 			for (unsigned i = 0; i < buffer->planes().size(); i++)
 			{
 				const FrameBuffer::Plane &plane = buffer->planes()[i];
 				buffer_size += plane.length;
 				if (i == buffer->planes().size() - 1 || plane.fd.get() != buffer->planes()[i + 1].fd.get())
 				{
-				  log("mmaped a plane at i=" + std::to_string(i));
+				  logv("mmaped a plane at i=" + std::to_string(i));
 					void *memory = mmap(NULL, buffer_size, PROT_READ | PROT_WRITE, MAP_SHARED, plane.fd.get(), 0);
 					mapped_buffers_[buffer.get()].push_back(
 						libcamera::Span<uint8_t>(static_cast<uint8_t *>(memory), buffer_size));
@@ -521,7 +530,7 @@ int LibcameraUsage::setupCapture() {
 			frame_buffers_[stream].push(buffer.get());
 		}
 	}
-	log("Buffers allocated and mapped");
+	logd("Buffers allocated and mapped");
   return SUCCESS;
 }
 
@@ -586,7 +595,7 @@ int LibcameraUsage::StartCapture() {
       return ERR_CAMERA_FAILED_TO_QUEUE_REQUEST;
     }
 	}
-	log("Camera started!");
+	logd("Camera started!");
   
   return SUCCESS;
 }
@@ -602,12 +611,12 @@ int LibcameraUsage::CleanupAndStopCapture() {
       }
 
 			camera_started_ = false;
-			log("camera stopped");
+			logd("camera stopped");
 		}
 	}
 
   if (camera_cleaned_up_) {
-    log("Skipped camera stop/cleanup!");
+    logd("Skipped camera stop/cleanup!");
     return SUCCESS;
   }
   camera_cleaned_up_ = true;
@@ -616,7 +625,7 @@ int LibcameraUsage::CleanupAndStopCapture() {
 		camera_->requestCompleted.disconnect(this, &LibcameraUsage::requestComplete);
   }
 
-  log("clearing completed_requests");
+  logd("clearing completed_requests");
 	completed_requests_.clear();
 
   {
@@ -628,7 +637,7 @@ int LibcameraUsage::CleanupAndStopCapture() {
 
 	controls_.clear(); // no need for mutex here
 
-  log("Camera capture stopped/cleaned up!");
+  logd("Camera capture stopped/cleaned up!");
 
   return SUCCESS;
 }
@@ -645,12 +654,10 @@ std::vector<libcamera::Span<uint8_t>> LibcameraUsage::Mmap(FrameBuffer *buffer) 
 {
 
 	auto item = mapped_buffers_.find(buffer);
-	log("mapped_buffers size: " + std::to_string(mapped_buffers_.size()));
 	if (item == mapped_buffers_.end()) {
-	  log("frame buffer not in map");
+	  loge("Frame buffer not in map");
 		return {};
   }
-  log("frame buffer was in map");
 	return item->second;
 }
 
@@ -679,7 +686,7 @@ void LibcameraUsage::requestComplete(Request *request) {
   if (request->status() == Request::RequestCancelled)
 		return;
 
-  log("inserting request into completed requests");
+  logd("Inserting request into completed requests");
   completed_requests_.insert(request);
 
   requests_cond_.notify_one();
@@ -697,7 +704,7 @@ int LibcameraUsage::makeRequests()
 			{
 				if (free_buffers[stream].empty())
 				{
-					log("Requests created");
+					logd("Requests created");
 					return SUCCESS;
 				}
 				std::unique_ptr<Request> request = camera_->createRequest();
@@ -729,7 +736,7 @@ int LibcameraUsage::makeRequests()
 
 void LibcameraUsage::Teardown() {
 
-  log("Entering teardown...");
+  logd("Entering teardown...");
 
   // stop capture if camera is running
   CleanupAndStopCapture();

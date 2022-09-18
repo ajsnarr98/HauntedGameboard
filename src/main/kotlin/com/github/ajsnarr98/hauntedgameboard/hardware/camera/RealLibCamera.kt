@@ -32,6 +32,7 @@ class RealLibCamera : Camera {
         println("Picture with width, height (${rawPicture.width}, ${rawPicture.height})")
         if (rawPicture.pixels.size != rawPicture.width * rawPicture.height * 3) {
             println("Pixels array does not match expected size")
+            println("Actual size is ${rawPicture.pixels.size} but expected ${rawPicture.width * rawPicture.height * 3}")
         }
         val image = Mat(rawPicture.height, rawPicture.width, CvType.CV_8UC3)
         var i = 0
@@ -83,7 +84,7 @@ class RealLibCamera : Camera {
             }
         }
 
-        private external fun showDebugLog(showDebugLog: Boolean)
+        private external fun showDebugLog(showDebugLog: Boolean, isVerbose: Boolean)
         private external fun acquireCamera(cxxThis: Long): Int
         private external fun releaseCamera(cxxThis: Long): Int
         private external fun takePicture(cxxThis: Long, picture: RawPicture): Int
