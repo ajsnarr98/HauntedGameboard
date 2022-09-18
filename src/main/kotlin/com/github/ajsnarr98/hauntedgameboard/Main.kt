@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
         println("taken")
 
 
-//        Imgcodecs.imwrite("tmp.jpeg", picture)
+        Imgcodecs.imwrite("tmp.jpeg", picture)
     }
 
 //    println("sleeping...")

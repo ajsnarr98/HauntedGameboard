@@ -252,14 +252,14 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     // TODO do we only care about the first completed request?
     libcamera::Request *req;
     std::set<libcamera::Request *> completedRequests = libCameraUsage->CompletedRequests();
-    logv("number of completed requests: " + std::to_string(completedRequests.size()));
+    logv("Number of completed requests: " + std::to_string(completedRequests.size()));
     std::set<libcamera::Request *>::iterator itr;
     for (itr = completedRequests.begin(); itr != completedRequests.end(); itr++) {
       req = *itr;
       break;
     }
     libcamera::Request::BufferMap buffers = req->buffers();
-    logv("buffermap size: " + std::to_string(buffers.size()));
+    logv("Buffermap size: " + std::to_string(buffers.size()));
     const std::vector<libcamera::Span<uint8_t>> mem = libCameraUsage->Mmap(buffers[stream]);
 
     // stop capture and reset capture data
@@ -278,7 +278,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camer
     int bgrPixelsSize = width * height * 3;
     jbyte *nativeBGRPixels = new jbyte[bgrPixelsSize];
 
-    logv("mem span vector size: " + std::to_string(mem.size()));
+    logv("Mem span vector size: " + std::to_string(mem.size()));
 
     err = yuv_to_bgr(nativeBGRPixels, pixelFormat, width, height, stride, mem[0].data());
 
@@ -686,7 +686,6 @@ void LibcameraUsage::requestComplete(Request *request) {
   if (request->status() == Request::RequestCancelled)
 		return;
 
-  logd("tmp hello");
   logd("Inserting request into completed requests");
   completed_requests_.insert(request);
 
