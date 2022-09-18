@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_00024Companion_showDebugLog
-  (JNIEnv *, jclass, jboolean);
+  (JNIEnv *, jclass, jboolean, jboolean);
 
 /*
  * Class:     com_github_ajsnarr98_hauntedgameboard_hardware_camera_RealLibCamera_Companion
