@@ -6,7 +6,7 @@ object OSUtil {
         when (currentOS) {
             OS.Windows -> "dll"
             OS.Linux -> "so"
-            OS.MacOS -> "so"
+            OS.MacOS -> "dylib"
         }
     }
 
