@@ -1,5 +1,6 @@
 package com.github.ajsnarr98.hauntedgameboard.hardware.camera
 
+import com.github.ajsnarr98.hauntedgameboard.hardware.NativeLibraryLoadException
 import cz.adamh.utils.NativeUtils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -115,7 +116,7 @@ class RealLibCamera : Camera {
             try {
                 NativeUtils.loadLibraryFromJar("/nativelib/camera.so")
             } catch (e: IOException) {
-                throw RuntimeException(e.toString())
+                throw NativeLibraryLoadException(e)
             }
         }
 
