@@ -24,7 +24,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Suppress("WarningOnMainUnusedParameterMigration")
 fun main(args: Array<String>) = application {
-    
+
     loadOpenCvSharedLib()
 
     val hardwareResourceManager: HardwareResourceManager =
@@ -36,43 +36,43 @@ fun main(args: Array<String>) = application {
     val mainContext: CoroutineContext = remember { Dispatchers.Main + Job() }
     val dispatcherProvider: DispatcherProvider = remember { DefaultDispatcherProvider() }
 
-    // create screen manager and initialize with first screen
-    val screenManager: ScreenManager = remember {
-        ScreenManager().also { screenManager ->
-            screenManager.push(
-                SplashScreen(
-                    controller = SplashController(
-                        controllerScope = CoroutineScope(mainContext),
-                        resourceManager = hardwareResourceManager,
-                        dispatcherProvider = dispatcherProvider,
-                    ),
-                    screenManager = screenManager,
-                )
-            )
-        }
-    }
-
-    Window(
-        onCloseRequest = {
-            try {
-                runBlocking {
-                    withTimeout(10000L) {
-                        mainContext.cancel()
-                        hardwareResourceManager.close()
-                    }
-                }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            } finally {
-                exitApplication()
-            }
-        },
-        state = mainWindowState,
-    ) {
-        MaterialTheme {
-            screenManager.compose()
-        }
-    }
+//    // create screen manager and initialize with first screen
+//    val screenManager: ScreenManager = remember {
+//        ScreenManager().also { screenManager ->
+//            screenManager.push(
+//                SplashScreen(
+//                    controller = SplashController(
+//                        controllerScope = CoroutineScope(mainContext),
+//                        resourceManager = hardwareResourceManager,
+//                        dispatcherProvider = dispatcherProvider,
+//                    ),
+//                    screenManager = screenManager,
+//                )
+//            )
+//        }
+//    }
+//
+//    Window(
+//        onCloseRequest = {
+//            try {
+//                runBlocking {
+//                    withTimeout(10000L) {
+//                        mainContext.cancel()
+//                        hardwareResourceManager.close()
+//                    }
+//                }
+//            } catch (t: Throwable) {
+//                t.printStackTrace()
+//            } finally {
+//                exitApplication()
+//            }
+//        },
+//        state = mainWindowState,
+//    ) {
+//        MaterialTheme {
+//            screenManager.compose()
+//        }
+//    }
 
 //    val isInit = runBlocking { gpio.initialize() }
 ////    if (!isInit) {
