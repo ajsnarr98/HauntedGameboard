@@ -9,9 +9,9 @@ class HeadlessSplashScreen(
 ) : HeadlessScreen<SplashController>(controller, screenManager) {
     override fun draw() = write {
         if (controller.isLoading) {
-            +"Loading..."
+            +"Loading...\n"
         } else {
-            +"Finished Loading"
+            +"Finished Loading\n"
         }
     }
 }

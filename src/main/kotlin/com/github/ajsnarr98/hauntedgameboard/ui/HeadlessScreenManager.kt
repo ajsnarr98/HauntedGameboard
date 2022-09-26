@@ -26,17 +26,19 @@ class HeadlessScreenManager(
     private var job: Job? = null
 
     /**
-     * Call this once to start drawing screens. Make sure this is called
+     * Call this to start drawing screens, and block until done. Make sure this is called
      * after the first screen has been pushed to the stack.
      */
-    fun start() {
+    fun startAndBlock() {
         outerJob = mainScope.launch(dispatcherProvider.main()) {
             // collect when the currentScreen changes
+            invalidateScreenState()
             triggerRedrawFlow.collect {
                 job?.cancelAndJoin()
                 val screen = currentScreen ?: throw IllegalStateException("No current screen found to display")
                 job = launch(dispatcherProvider.main()) {
                     screen.draw()
+                    out.flush()
                     screen.controller.triggerRedrawFlow.collect {
                         screen.draw()
                         out.flush()
@@ -44,6 +46,7 @@ class HeadlessScreenManager(
                 }
             }
         }
+        runBlocking { outerJob?.join() }
     }
 
     override fun close() {

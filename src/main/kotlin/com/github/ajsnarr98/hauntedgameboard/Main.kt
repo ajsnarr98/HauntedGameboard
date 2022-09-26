@@ -108,6 +108,9 @@ fun composeMain() = application {
 }
 
 fun headlessMain() {
+
+    println("Displaying in headless mode...")
+
     val hardwareResourceManager = DefaultHardwareResourceManager()
     val mainContext: CoroutineContext = Dispatchers.Main + Job()
     val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
@@ -132,13 +135,16 @@ fun headlessMain() {
     Runtime.getRuntime().addShutdownHook(object : Thread() {
         override fun run() {
             try {
+                println("Shutdown hook cleaning up...")
+                screenManager.close()
                 onRequestCloseApplication(mainContext, hardwareResourceManager)
             } catch (t: Throwable) {
                 t.printStackTrace()
             }
         }
     })
-    screenManager.start()
+    screenManager.startAndBlock()
+    println("Exiting headless mode...")
 }
 
 /**

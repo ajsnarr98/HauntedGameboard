@@ -19,6 +19,13 @@ abstract class ScreenStateController {
      */
     val triggerRedrawFlow: Flow<Unit> = triggerRedrawChannel.receiveAsFlow()
 
+    /**
+     * Force trigger a redraw.
+     */
+    fun invalidateScreenState() {
+        triggerRedrawChannel.trySend(Unit)
+    }
+
     protected fun <T> mutableStateOf(
         value: T,
         policy: SnapshotMutationPolicy<T> = structuralEqualityPolicy()

@@ -23,6 +23,7 @@ class SplashController(
         controllerScope.launch(dispatcherProvider.io()) {
             try {
                 resourceManager.initialize()
+                isLoading = false
             } catch (e: HardwareResourceManager.HardwareInitializationException) {
                 // TODO show error dialog
             }
