@@ -1,7 +1,6 @@
 package com.github.ajsnarr98.hauntedgameboard.ui.splash
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.github.ajsnarr98.hauntedgameboard.hardware.HardwareResourceManager
 import com.github.ajsnarr98.hauntedgameboard.ui.ScreenController
@@ -16,7 +15,7 @@ class SplashController(
     override val controllerScope: CoroutineScope,
     val resourceManager: HardwareResourceManager,
     val dispatcherProvider: DispatcherProvider,
-) : ScreenController {
+) : ScreenController() {
 
     var isLoading: Boolean by mutableStateOf(true)
 

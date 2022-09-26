@@ -9,7 +9,10 @@ import androidx.compose.ui.window.rememberWindowState
 import com.github.ajsnarr98.hauntedgameboard.hardware.DefaultHardwareResourceManager
 import com.github.ajsnarr98.hauntedgameboard.hardware.HardwareResourceManager
 import com.github.ajsnarr98.hauntedgameboard.hardware.NativeLibraryLoadException
-import com.github.ajsnarr98.hauntedgameboard.ui.ScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.AbstractScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.HeadlessScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.splash.HeadlessSplashScreen
 import com.github.ajsnarr98.hauntedgameboard.ui.splash.SplashController
 import com.github.ajsnarr98.hauntedgameboard.ui.splash.SplashScreen
 import com.github.ajsnarr98.hauntedgameboard.util.DefaultDispatcherProvider
@@ -18,14 +21,22 @@ import com.github.ajsnarr98.hauntedgameboard.util.OSUtil
 import cz.adamh.utils.NativeUtils
 import kotlinx.coroutines.*
 import org.opencv.core.Core
+import java.awt.GraphicsEnvironment
 import java.io.IOException
 import java.nio.file.Paths
 import kotlin.coroutines.CoroutineContext
 
 @Suppress("WarningOnMainUnusedParameterMigration")
-fun main(args: Array<String>) = application {
-
+fun main(args: Array<String>) {
     loadOpenCvSharedLib()
+    if (GraphicsEnvironment.isHeadless() || true) {
+        headlessMain()
+    } else {
+        composeMain()
+    }
+}
+
+fun composeMain() = application {
 
     val hardwareResourceManager: HardwareResourceManager =
         remember { DefaultHardwareResourceManager() }
@@ -37,8 +48,8 @@ fun main(args: Array<String>) = application {
     val dispatcherProvider: DispatcherProvider = remember { DefaultDispatcherProvider() }
 
     // create screen manager and initialize with first screen
-    val screenManager: ScreenManager = remember {
-        ScreenManager().also { screenManager ->
+    val screenManager: ComposeScreenManager = remember {
+        ComposeScreenManager().also { screenManager ->
             screenManager.push(
                 SplashScreen(
                     controller = SplashController(
@@ -55,12 +66,7 @@ fun main(args: Array<String>) = application {
     Window(
         onCloseRequest = {
             try {
-                runBlocking {
-                    withTimeout(10000L) {
-                        mainContext.cancel()
-                        hardwareResourceManager.close()
-                    }
-                }
+                onRequestCloseApplication(mainContext, hardwareResourceManager)
             } catch (t: Throwable) {
                 t.printStackTrace()
             } finally {
@@ -99,6 +105,55 @@ fun main(args: Array<String>) = application {
 //
 //    gpio.close()
 //    camera.close()
+}
+
+fun headlessMain() {
+    val hardwareResourceManager = DefaultHardwareResourceManager()
+    val mainContext: CoroutineContext = Dispatchers.Main + Job()
+    val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+
+    // create screen manager and initialize with first screen
+    val screenManager: HeadlessScreenManager = HeadlessScreenManager(
+        mainScope = CoroutineScope(mainContext),
+        dispatcherProvider = dispatcherProvider,
+    ).also { screenManager ->
+        screenManager.push(
+            HeadlessSplashScreen(
+                controller = SplashController(
+                    controllerScope = CoroutineScope(mainContext),
+                    resourceManager = hardwareResourceManager,
+                    dispatcherProvider = dispatcherProvider,
+                ),
+                screenManager = screenManager,
+            )
+        )
+    }
+
+    Runtime.getRuntime().addShutdownHook(object : Thread() {
+        override fun run() {
+            try {
+                onRequestCloseApplication(mainContext, hardwareResourceManager)
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            }
+        }
+    })
+    screenManager.start()
+}
+
+/**
+ * Warning, this may throw
+ */
+fun onRequestCloseApplication(
+    mainContext: CoroutineContext,
+    hardwareResourceManager: HardwareResourceManager
+) {
+    runBlocking {
+        withTimeout(10000L) {
+            mainContext.cancel()
+            hardwareResourceManager.close()
+        }
+    }
 }
 
 private fun loadOpenCvSharedLib() {

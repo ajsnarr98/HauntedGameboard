@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version "1.6.10"
     java
     id("org.jetbrains.compose") version "1.1.0"
-//    application
 }
 
 val glBasePackageName = "com.github.ajsnarr98.hauntedgameboard"
@@ -11,14 +10,10 @@ val glMainClassName = "$glBasePackageName.MainKt"
 group = glBasePackageName
 version = "alpha-1.0"
 
-//application {
-//    mainClassName = glMainClassName
-//}
-
 dependencies {
     implementation(kotlin("stdlib"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4") // kotlin 1.6.21
     implementation(compose.desktop.currentOs)
 
     // opencv

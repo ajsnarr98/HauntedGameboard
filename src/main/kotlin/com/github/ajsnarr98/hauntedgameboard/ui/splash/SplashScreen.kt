@@ -5,13 +5,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.github.ajsnarr98.hauntedgameboard.ui.Screen
-import com.github.ajsnarr98.hauntedgameboard.ui.ScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreen
+import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreenManager
 
 class SplashScreen(
     controller: SplashController,
-    screenManager: ScreenManager,
-) : Screen<SplashController>(controller, screenManager) {
+    screenManager: ComposeScreenManager,
+) : ComposeScreen<SplashController>(controller, screenManager) {
     @Composable
     override fun compose() {
         Box {
