@@ -7,6 +7,7 @@ import com.github.ajsnarr98.hauntedgameboard.ui.ScreenController
 import com.github.ajsnarr98.hauntedgameboard.util.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Controller responsible for initial app loading.
@@ -23,7 +24,7 @@ class SplashController(
         controllerScope.launch(dispatcherProvider.io()) {
             try {
                 resourceManager.initialize()
-                isLoading = false
+                withContext(dispatcherProvider.main()) { isLoading = false }
             } catch (e: HardwareResourceManager.HardwareInitializationException) {
                 // TODO show error dialog
             }

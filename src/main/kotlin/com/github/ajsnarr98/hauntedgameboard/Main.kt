@@ -29,7 +29,7 @@ import kotlin.coroutines.CoroutineContext
 @Suppress("WarningOnMainUnusedParameterMigration")
 fun main(args: Array<String>) {
     loadOpenCvSharedLib()
-    if (GraphicsEnvironment.isHeadless() || true) {
+    if (GraphicsEnvironment.isHeadless()) {
         headlessMain()
     } else {
         composeMain()
@@ -52,6 +52,7 @@ fun composeMain() = application {
         ComposeScreenManager().also { screenManager ->
             screenManager.push(
                 SplashScreen(
+                    windowState = mainWindowState,
                     controller = SplashController(
                         controllerScope = CoroutineScope(mainContext),
                         resourceManager = hardwareResourceManager,

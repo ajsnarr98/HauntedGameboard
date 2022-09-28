@@ -1,7 +1,7 @@
 package com.github.ajsnarr98.hauntedgameboard.vision.chessboard.checkers
 
+import androidx.compose.ui.graphics.Color
 import com.github.ajsnarr98.hauntedgameboard.games.GameState
-import com.github.ajsnarr98.hauntedgameboard.util.Color
 
 data class CheckersHardwareBoardState(
     val board: List<List<SquareState>> = Array(BOARD_SIZE) {
