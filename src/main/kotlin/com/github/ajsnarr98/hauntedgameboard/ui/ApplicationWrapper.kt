@@ -1,5 +1,6 @@
 package com.github.ajsnarr98.hauntedgameboard.ui
 
+import androidx.compose.ui.window.ApplicationScope
 import com.github.ajsnarr98.hauntedgameboard.hardware.HardwareResourceManager
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
@@ -20,10 +21,7 @@ sealed class ApplicationWrapper protected constructor(
      */
     fun closeApplication(stopApplicationHere: Boolean = true) {
         try {
-            com.github.ajsnarr98.hauntedgameboard.onRequestCloseApplication(
-                mainContext,
-                hardwareResourceManager
-            )
+            onRequestCloseApplication()
         } catch (t: Throwable) {
             t.printStackTrace()
         } finally {
@@ -45,4 +43,19 @@ sealed class ApplicationWrapper protected constructor(
         }
     }
 }
+
+class ComposeApplicationWrapper(
+    mainContext: CoroutineContext,
+    hardwareResourceManager: HardwareResourceManager,
+    applicationScope: ApplicationScope,
+) : ApplicationWrapper(mainContext, hardwareResourceManager, exitApplication = {
+    applicationScope.exitApplication()
+})
+
+class HeadlessApplicationWrapper(
+    mainContext: CoroutineContext,
+    hardwareResourceManager: HardwareResourceManager,
+) : ApplicationWrapper(mainContext, hardwareResourceManager, exitApplication = {
+    throw Exception("Exiting application...")
+})
 

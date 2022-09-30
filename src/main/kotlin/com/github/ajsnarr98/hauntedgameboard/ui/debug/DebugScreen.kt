@@ -8,14 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.WindowState
-import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreen
-import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreenManager
-import org.opencv.imgproc.Imgproc
+import com.github.ajsnarr98.hauntedgameboard.ui.screen.ComposeScreen
+import com.github.ajsnarr98.hauntedgameboard.ui.screenmanager.ComposeScreenManager
 
 class DebugScreen(
     windowState: WindowState,
@@ -31,7 +29,7 @@ class DebugScreen(
     }
 
     @Composable
-    override fun compose() {
+    override fun _compose() {
         Row(
             modifier = Modifier.fillMaxSize()
         ) {

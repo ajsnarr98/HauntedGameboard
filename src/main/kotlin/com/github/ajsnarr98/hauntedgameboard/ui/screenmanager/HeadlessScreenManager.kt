@@ -1,20 +1,18 @@
-package com.github.ajsnarr98.hauntedgameboard.ui
+package com.github.ajsnarr98.hauntedgameboard.ui.screenmanager
 
+import com.github.ajsnarr98.hauntedgameboard.ui.ApplicationWrapper
+import com.github.ajsnarr98.hauntedgameboard.ui.screencontroller.ScreenController
+import com.github.ajsnarr98.hauntedgameboard.ui.screen.HeadlessScreen
 import com.github.ajsnarr98.hauntedgameboard.util.DispatcherProvider
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapConcat
 import java.io.BufferedOutputStream
-import java.io.BufferedWriter
 import java.io.Closeable
-import java.io.OutputStream
 import java.io.PrintStream
-import java.io.Writer
-import kotlin.coroutines.CoroutineContext
 
 class HeadlessScreenManager(
     private val mainScope: CoroutineScope,
     private val dispatcherProvider: DispatcherProvider,
+    override val applicationWrapper: ApplicationWrapper
 ) : AbstractScreenManager<HeadlessScreen<out ScreenController>>(), Closeable {
 
     /**

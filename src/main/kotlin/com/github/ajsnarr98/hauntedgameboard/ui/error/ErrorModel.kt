@@ -52,8 +52,18 @@ class GenericErrorModel private constructor(
     ) : this(
         isFatal = isFatal,
         onRetry = onRetry,
-        userFacingMessage = userFacingMessage ?: cause.message ?: cause.javaClass.name,
-        loggableMessage = cause.message ?: cause.javaClass.name,
+        userFacingMessage = userFacingMessage ?: defaultCauseMessage(cause),
+        loggableMessage = defaultCauseMessage(cause),
         cause = cause,
     )
+
+    companion object {
+        private fun defaultCauseMessage(cause: Throwable): String {
+            return if (cause.message != null) {
+                "${cause.javaClass.name}: ${cause.message}"
+            } else {
+                cause.javaClass.name
+            }
+        }
+    }
 }

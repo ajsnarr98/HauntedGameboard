@@ -9,9 +9,9 @@ import androidx.compose.ui.window.rememberWindowState
 import com.github.ajsnarr98.hauntedgameboard.hardware.DefaultHardwareResourceManager
 import com.github.ajsnarr98.hauntedgameboard.hardware.HardwareResourceManager
 import com.github.ajsnarr98.hauntedgameboard.hardware.NativeLibraryLoadException
-import com.github.ajsnarr98.hauntedgameboard.ui.AbstractScreenManager
-import com.github.ajsnarr98.hauntedgameboard.ui.ComposeScreenManager
-import com.github.ajsnarr98.hauntedgameboard.ui.HeadlessScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.*
+import com.github.ajsnarr98.hauntedgameboard.ui.screenmanager.ComposeScreenManager
+import com.github.ajsnarr98.hauntedgameboard.ui.screenmanager.HeadlessScreenManager
 import com.github.ajsnarr98.hauntedgameboard.ui.splash.HeadlessSplashScreen
 import com.github.ajsnarr98.hauntedgameboard.ui.splash.SplashController
 import com.github.ajsnarr98.hauntedgameboard.ui.splash.SplashScreen
@@ -47,9 +47,17 @@ fun composeMain() = application {
     val mainContext: CoroutineContext = remember { Dispatchers.Main + Job() }
     val dispatcherProvider: DispatcherProvider = remember { DefaultDispatcherProvider() }
 
+    val applicationWrapper = remember {
+        ComposeApplicationWrapper(
+            mainContext = mainContext,
+            hardwareResourceManager = hardwareResourceManager,
+            applicationScope = this@application,
+        )
+    }
+
     // create screen manager and initialize with first screen
     val screenManager: ComposeScreenManager = remember {
-        ComposeScreenManager().also { screenManager ->
+        ComposeScreenManager(applicationWrapper).also { screenManager ->
             screenManager.push(
                 SplashScreen(
                     windowState = mainWindowState,
@@ -65,15 +73,7 @@ fun composeMain() = application {
     }
 
     Window(
-        onCloseRequest = {
-            try {
-                onRequestCloseApplication(mainContext, hardwareResourceManager)
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            } finally {
-                exitApplication()
-            }
-        },
+        onCloseRequest = { applicationWrapper.closeApplication() },
         state = mainWindowState,
     ) {
         MaterialTheme {
@@ -116,10 +116,16 @@ fun headlessMain() {
     val mainContext: CoroutineContext = Dispatchers.Main + Job()
     val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 
+    val applicationWrapper = HeadlessApplicationWrapper(
+        mainContext = mainContext,
+        hardwareResourceManager = hardwareResourceManager,
+    )
+
     // create screen manager and initialize with first screen
     val screenManager: HeadlessScreenManager = HeadlessScreenManager(
         mainScope = CoroutineScope(mainContext),
         dispatcherProvider = dispatcherProvider,
+        applicationWrapper = applicationWrapper,
     ).also { screenManager ->
         screenManager.push(
             HeadlessSplashScreen(
@@ -135,32 +141,11 @@ fun headlessMain() {
 
     Runtime.getRuntime().addShutdownHook(object : Thread() {
         override fun run() {
-            try {
-                println("Shutdown hook cleaning up...")
-                screenManager.close()
-                onRequestCloseApplication(mainContext, hardwareResourceManager)
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            }
+            applicationWrapper.closeApplication(stopApplicationHere = false)
         }
     })
     screenManager.startAndBlock()
     println("Exiting headless mode...")
-}
-
-/**
- * Warning, this may throw
- */
-fun onRequestCloseApplication(
-    mainContext: CoroutineContext,
-    hardwareResourceManager: HardwareResourceManager
-) {
-    runBlocking {
-        withTimeout(10000L) {
-            mainContext.cancel()
-            hardwareResourceManager.close()
-        }
-    }
 }
 
 private fun loadOpenCvSharedLib() {

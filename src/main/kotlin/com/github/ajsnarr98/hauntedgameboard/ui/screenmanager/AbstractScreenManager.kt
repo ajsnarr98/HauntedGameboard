@@ -1,7 +1,11 @@
-package com.github.ajsnarr98.hauntedgameboard.ui
+package com.github.ajsnarr98.hauntedgameboard.ui.screenmanager
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.github.ajsnarr98.hauntedgameboard.ui.ApplicationWrapper
+import com.github.ajsnarr98.hauntedgameboard.ui.screencontroller.ScreenController
+import com.github.ajsnarr98.hauntedgameboard.ui.ScreenStateController
+import com.github.ajsnarr98.hauntedgameboard.ui.screen.Screen
 import java.util.LinkedList
 
 /**
@@ -9,6 +13,8 @@ import java.util.LinkedList
  */
 abstract class AbstractScreenManager<T : Screen<out ScreenController>> : ScreenStateController() {
     private val stack: LinkedList<T> = LinkedList()
+
+    abstract val applicationWrapper: ApplicationWrapper
 
     protected var currentScreen: T? by mutableStateOf(stack.peek())
 

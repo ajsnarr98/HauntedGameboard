@@ -3,17 +3,16 @@ package com.github.ajsnarr98.hauntedgameboard.ui.debug
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.github.ajsnarr98.hauntedgameboard.hardware.HardwareResourceManager
-import com.github.ajsnarr98.hauntedgameboard.ui.ScreenController
+import com.github.ajsnarr98.hauntedgameboard.ui.screencontroller.ScreenController
 import com.github.ajsnarr98.hauntedgameboard.util.DispatcherProvider
 import com.github.ajsnarr98.hauntedgameboard.util.toImageBitmap
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DebugController(
     override val controllerScope: CoroutineScope,
     val resourceManager: HardwareResourceManager,
-    val dispatcherProvider: DispatcherProvider,
+    override val dispatcherProvider: DispatcherProvider,
 ) : ScreenController() {
 
     /**
@@ -39,7 +38,7 @@ class DebugController(
 
     fun onTakePicture(model: DebugTabModel.Camera) {
         currentTab = model.copy(isLoading = true)
-        controllerScope.launch(dispatcherProvider.io()) {
+        controllerScope.launchWithErrorCapturing(dispatcherProvider.io()) {
             val image = resourceManager.camera.takePicture().toImageBitmap()
             withContext(dispatcherProvider.main()) {
                 val tab = currentTab
