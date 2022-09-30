@@ -1,7 +1,7 @@
 plugins {
-    application
     kotlin("jvm") version "1.6.10"
     java
+    id("org.jetbrains.compose") version "1.1.0"
 }
 
 val glBasePackageName = "com.github.ajsnarr98.hauntedgameboard"
@@ -10,25 +10,20 @@ val glMainClassName = "$glBasePackageName.MainKt"
 group = glBasePackageName
 version = "alpha-1.0"
 
-application {
-    mainClassName = glMainClassName
-}
-
 dependencies {
     implementation(kotlin("stdlib"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
-
-    implementation("uk.co.caprica:picam:2.0.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4") // kotlin 1.6.21
+    implementation(compose.desktop.currentOs)
 
     // opencv
-//    implementation("opencv:opencv:4.0.0-0")
     implementation(files("lib/opencv-460.jar"))
 }
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://clojars.org/repo/") }
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
 }
 
 sourceSets {
@@ -49,6 +44,12 @@ tasks.test {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions {
         jvmTarget = "11"
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = glMainClassName
     }
 }
 

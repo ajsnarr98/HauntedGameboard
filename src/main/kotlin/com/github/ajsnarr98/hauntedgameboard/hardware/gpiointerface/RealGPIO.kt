@@ -1,5 +1,6 @@
 package com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface
 
+import com.github.ajsnarr98.hauntedgameboard.hardware.NativeLibraryLoadException
 import cz.adamh.utils.NativeUtils
 import java.io.IOException
 
@@ -15,7 +16,7 @@ object RealGPIO : AbstractGPIOInterface() {
         try {
             NativeUtils.loadLibraryFromJar("/nativelib/gpio.so")
         } catch (e: IOException) {
-            throw RuntimeException(e.toString())
+            throw NativeLibraryLoadException(e)
         }
         setLogLevel(LOG_LEVEL)
     }

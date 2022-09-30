@@ -1,7 +1,7 @@
 package com.github.ajsnarr98.hauntedgameboard.games.checkers
 
+import androidx.compose.ui.graphics.Color
 import com.github.ajsnarr98.hauntedgameboard.games.GameState
-import com.github.ajsnarr98.hauntedgameboard.util.Color
 
 const val BOARD_SIZE = 10
 
