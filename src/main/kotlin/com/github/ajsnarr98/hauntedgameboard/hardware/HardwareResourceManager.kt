@@ -25,7 +25,7 @@ interface HardwareResourceManager : Initializable, Closeable {
 }
 
 class DefaultHardwareResourceManager(
-    val dispatcherProvider: DispatcherProvider,
+    private val dispatcherProvider: DispatcherProvider,
     cameraConstructor: () -> Camera = {
         try {
             RealLibCamera()
@@ -67,11 +67,15 @@ class DefaultHardwareResourceManager(
         val initialized = mutableListOf<Initializable>()
         var success: Boolean
         for (res in listOf<Initializable>(camera, gpio)) {
+            // TODO log
+            println("Initializing ${res.javaClass.simpleName}")
             success = if (res in mustInitializeOnMainThread) {
                 withContext(dispatcherProvider.main()) { res.initialize() }
             } else {
                 res.initialize()
             }
+            // TODO log
+            println("Finished initializing ${res.javaClass.simpleName} with success=$success")
             if (!success) {
                 initialized.forEach { if (it is Closeable) it.close() }
                 throw HardwareResourceManager.HardwareInitializationException(res.javaClass.name)
