@@ -54,12 +54,13 @@ class DefaultHardwareResourceManager(
     },
 ) : HardwareResourceManager {
     override val camera: Camera = FakeCamera() //cameraConstructor()
-    override val gpio: GPIOInterface = gpioConstructor()
+    override val gpio: GPIOInterface = FakeGPIO() // gpioConstructor()
 
     override suspend fun initialize(): Boolean {
         val initialized = mutableListOf<Initializable>()
         for (res in listOf<Initializable>(camera, gpio)) {
             if (!res.initialize()) {
+                println("initializing ${if (res == camera) "camera" else "gpio"}")
                 initialized.forEach { if (it is Closeable) it.close() }
                 throw HardwareResourceManager.HardwareInitializationException(res.javaClass.name)
             }
