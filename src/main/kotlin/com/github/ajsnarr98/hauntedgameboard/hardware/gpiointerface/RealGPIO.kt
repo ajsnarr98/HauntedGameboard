@@ -28,7 +28,6 @@ object RealGPIO : AbstractGPIOInterface() {
     private external fun _setLogLevel(logLevel: Int): Int
 
     override fun initializeConnection(): Boolean {
-        println("calling _initialize")
         return _initialize() >= 0
     }
 
