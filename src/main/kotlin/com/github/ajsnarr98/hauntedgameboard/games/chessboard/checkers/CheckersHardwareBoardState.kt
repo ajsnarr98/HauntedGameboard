@@ -1,4 +1,4 @@
-package com.github.ajsnarr98.hauntedgameboard.vision.chessboard.checkers
+package com.github.ajsnarr98.hauntedgameboard.games.chessboard.checkers
 
 import androidx.compose.ui.graphics.Color
 import com.github.ajsnarr98.hauntedgameboard.games.GameState
