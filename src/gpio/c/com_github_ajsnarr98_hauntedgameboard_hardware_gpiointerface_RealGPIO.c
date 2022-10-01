@@ -38,6 +38,7 @@ JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpioi
  */
 JNIEXPORT jint JNICALL Java_com_github_ajsnarr98_hauntedgameboard_hardware_gpiointerface_RealGPIO__1initialize
   (JNIEnv *env, jclass clz) {
+    printf("test\n");
     if (logLevel <= INFO) printf("Native: Initializing pigpio\n");
     return gpioInitialise();
   }
