@@ -6,7 +6,10 @@ import com.github.ajsnarr98.hauntedgameboard.hardware.camera.RealLibCamera
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.FakeGPIO
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.GPIOInterface
 import com.github.ajsnarr98.hauntedgameboard.hardware.gpiointerface.RealGPIO
+import com.github.ajsnarr98.hauntedgameboard.util.DefaultDispatcherProvider
+import com.github.ajsnarr98.hauntedgameboard.util.DispatcherProvider
 import com.github.ajsnarr98.hauntedgameboard.util.Initializable
+import kotlinx.coroutines.withContext
 import java.io.Closeable
 
 interface HardwareResourceManager : Initializable, Closeable {
@@ -22,6 +25,7 @@ interface HardwareResourceManager : Initializable, Closeable {
 }
 
 class DefaultHardwareResourceManager(
+    val dispatcherProvider: DispatcherProvider,
     cameraConstructor: () -> Camera = {
         try {
             RealLibCamera()
@@ -54,22 +58,24 @@ class DefaultHardwareResourceManager(
     },
 ) : HardwareResourceManager {
     override val camera: Camera = cameraConstructor()
-
-    //    override val camera: Camera = FakeCamera()
     override val gpio: GPIOInterface = gpioConstructor()
-//    override val gpio: GPIOInterface = FakeGPIO()
+
+    /* Native gpio must be initialized on main thread. */
+    private val mustInitializeOnMainThread = hashSetOf<Initializable>(gpio)
 
     override suspend fun initialize(): Boolean {
         val initialized = mutableListOf<Initializable>()
+        var success: Boolean
         for (res in listOf<Initializable>(camera, gpio)) {
-            println("initializing ${if (res == camera) "camera" else "gpio"}")
-            if (!res.initialize()) {
-                println("closing all initialized $initialized")
+            success = if (res in mustInitializeOnMainThread) {
+                withContext(dispatcherProvider.main()) { res.initialize() }
+            } else {
+                res.initialize()
+            }
+            if (!success) {
                 initialized.forEach { if (it is Closeable) it.close() }
-                println("closed")
                 throw HardwareResourceManager.HardwareInitializationException(res.javaClass.name)
             }
-            println("initialized ${if (res == camera) "camera" else "gpio"}")
             initialized.add(res)
         }
         return true

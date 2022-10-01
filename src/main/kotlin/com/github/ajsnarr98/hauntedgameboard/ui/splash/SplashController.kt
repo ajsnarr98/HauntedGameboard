@@ -20,7 +20,7 @@ class SplashController(
     var isLoading: Boolean by mutableStateOf(true)
 
     init {
-        controllerScope.launchWithErrorCapturing(dispatcherProvider.main()) {
+        controllerScope.launchWithErrorCapturing(dispatcherProvider.io()) {
             resourceManager.initialize()
             withContext(dispatcherProvider.main()) { isLoading = false }
         }
