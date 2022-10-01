@@ -56,8 +56,8 @@ class DefaultHardwareResourceManager(
     override val camera: Camera = cameraConstructor()
 
     //    override val camera: Camera = FakeCamera()
-//    override val gpio: GPIOInterface = gpioConstructor()
-    override val gpio: GPIOInterface = FakeGPIO()
+    override val gpio: GPIOInterface = gpioConstructor()
+//    override val gpio: GPIOInterface = FakeGPIO()
 
     override suspend fun initialize(): Boolean {
         val initialized = mutableListOf<Initializable>()
