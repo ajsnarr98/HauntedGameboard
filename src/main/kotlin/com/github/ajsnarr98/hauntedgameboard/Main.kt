@@ -38,14 +38,15 @@ fun main(args: Array<String>) {
 
 fun composeMain() = application {
 
+    val mainContext: CoroutineContext = remember { Dispatchers.Main + Job() }
+    val dispatcherProvider: DispatcherProvider = remember { DefaultDispatcherProvider() }
+
     val hardwareResourceManager: HardwareResourceManager =
-        remember { DefaultHardwareResourceManager() }
+        remember { DefaultHardwareResourceManager(dispatcherProvider) }
 
     val mainWindowState = rememberWindowState(
         placement = WindowPlacement.Maximized,
     )
-    val mainContext: CoroutineContext = remember { Dispatchers.Main + Job() }
-    val dispatcherProvider: DispatcherProvider = remember { DefaultDispatcherProvider() }
 
     val applicationWrapper = remember {
         ComposeApplicationWrapper(
@@ -112,9 +113,10 @@ fun headlessMain() {
 
     println("Displaying in headless mode...")
 
-    val hardwareResourceManager = DefaultHardwareResourceManager()
     val mainContext: CoroutineContext = Dispatchers.Main + Job()
     val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+
+    val hardwareResourceManager = DefaultHardwareResourceManager(dispatcherProvider)
 
     val applicationWrapper = HeadlessApplicationWrapper(
         mainContext = mainContext,
