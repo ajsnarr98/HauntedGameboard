@@ -68,7 +68,7 @@ class DefaultHardwareResourceManager(
         var success: Boolean
         for (res in listOf<Initializable>(camera, gpio)) {
             // TODO log
-            println("Initializing ${res.javaClass.simpleName}")
+            println("Initializing ${res.javaClass.simpleName}...${if (res in mustInitializeOnMainThread) " (main thread only)" else ""}")
             success = if (res in mustInitializeOnMainThread) {
                 withContext(dispatcherProvider.main()) { res.initialize() }
             } else {
