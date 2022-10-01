@@ -59,11 +59,14 @@ class DefaultHardwareResourceManager(
     override suspend fun initialize(): Boolean {
         val initialized = mutableListOf<Initializable>()
         for (res in listOf<Initializable>(camera, gpio)) {
+            println("initializing ${if (res == camera) "camera" else "gpio"}")
             if (!res.initialize()) {
-                println("initializing ${if (res == camera) "camera" else "gpio"}")
+                println("closing all initialized $initialized")
                 initialized.forEach { if (it is Closeable) it.close() }
+                println("closed")
                 throw HardwareResourceManager.HardwareInitializationException(res.javaClass.name)
             }
+            println("initialized ${if (res == camera) "camera" else "gpio"}")
             initialized.add(res)
         }
         return true
