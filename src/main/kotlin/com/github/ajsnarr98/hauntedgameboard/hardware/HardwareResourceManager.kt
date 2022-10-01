@@ -53,7 +53,7 @@ class DefaultHardwareResourceManager(
         }
     },
 ) : HardwareResourceManager {
-    override val camera: Camera = cameraConstructor()
+    override val camera: Camera = FakeCamera() //cameraConstructor()
     override val gpio: GPIOInterface = gpioConstructor()
 
     override suspend fun initialize(): Boolean {
