@@ -57,7 +57,8 @@ class DefaultHardwareResourceManager(
         }
     },
 ) : HardwareResourceManager {
-    override val camera: Camera = cameraConstructor()
+    //    override val camera: Camera = cameraConstructor()
+    override val camera: Camera = FakeCamera()
     override val gpio: GPIOInterface = gpioConstructor()
 
     /* Native gpio must be initialized on main thread. */
