@@ -40,12 +40,13 @@ class DebugController(
         currentTab = model.copy(isLoading = true)
         controllerScope.launchWithErrorCapturing(dispatcherProvider.io()) {
             val image = resourceManager.camera.takePicture().toImageBitmap()
-            withContext(dispatcherProvider.main()) {
-                val tab = currentTab
-                if (tab is DebugTabModel.Camera) {
-                    currentTab = tab.copy(image = image)
-                }
-            }
+            println(image.toString())
+//            withContext(dispatcherProvider.main()) {
+//                val tab = currentTab
+//                if (tab is DebugTabModel.Camera) {
+//                    currentTab = tab.copy(image = image)
+//                }
+//            }
         }
     }
 }

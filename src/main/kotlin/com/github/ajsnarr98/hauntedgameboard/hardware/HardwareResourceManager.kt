@@ -88,7 +88,7 @@ class DefaultHardwareResourceManager(
     }
 
     override fun close() {
-        for (res in listOf<Closeable>(camera, gpio)) {
+        for (res in listOf<Closeable>(gpio, camera)) {
             // TODO log
             println("Closing ${res.javaClass.simpleName}")
             res.close()
